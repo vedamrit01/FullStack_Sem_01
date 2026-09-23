@@ -1,0 +1,32 @@
+#item-1 {
+    background-color: aqua;
+    height: 200px;
+    width: 200px;
+
+    padding: 10px;
+    margin: 20px;
+
+    border-style: solid;
+    border-color: blue;
+    border-width: 10px;
+}
+
+
+#item-2 {
+    background-color: antiquewhite;
+    height: 200px;
+    width: 200px;
+
+    padding: 10px;
+    margin: 20px;
+
+
+     border-style: solid;
+    border-color: palevioletred;
+    border-width: 10px;
+
+box-sizing: border-box;
+
+
+
+}

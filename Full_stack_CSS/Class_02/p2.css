@@ -1,0 +1,32 @@
+h1{
+    background-color: aquamarine;
+    height: 50px;
+    width: 200px;
+    padding: 15px;
+    padding-left: 85px;
+    padding-top:25px;
+
+     border-style: solid;
+    border-color: blue;
+    border-width: 10px;
+}
+
+
+
+div{
+    background-color: blanchedalmond;
+    height: 300px;
+    width: 400px;
+
+    padding-left: 135px;
+    padding-right: 80px;
+    padding-top: 1px;
+}
+
+
+
+span{
+    background-color: greenyellow;
+    padding-left: 5px;
+    padding-right: 5px;
+}
