@@ -1,0 +1,36 @@
+h1{
+    background-color: aliceblue;
+    width: 460px;
+    length: 150px;
+    color: aqua;
+}
+
+p{
+    color: blueviolet;
+}
+
+body{
+    background-color: snow;
+}
+
+
+p{
+    color: bisque;                  
+}
+/*cascading i.e. the latest update will be priortised*/
+
+
+.colorA{
+    color: darkcyan;
+    font:bold;
+    font-size: 40px;
+}
+
+#specific-color{
+    color: blue;
+}
+
+
+.colorB{
+    color: crimson;
+}
