@@ -1,0 +1,35 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+
+
+.card{
+padding: 20px;
+background-color: aqua;
+}
+
+
+
+.bg-green{
+    background-color: green;
+}
+
+
+
+.big{
+    
+    padding: 40px;
+}
+
+
+.big.bg-green{
+    background-color: rgba(226, 226, 13, 0.849);
+}
+
+
+.text-underline{
+    text-decoration: underline;
+}
