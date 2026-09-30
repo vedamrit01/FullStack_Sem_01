@@ -1,0 +1,19 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+
+
+
+div {
+    width: 500vw;
+    background-color: crimson;
+    overflow: hidden;
+    
+  
+}
+section{
+    background-color: aqua;
+}
