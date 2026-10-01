@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+    bix-sizing: border-box;
+}
+
+/*.a{
+    width: 300px;
+    height: 150px;
+    background-color: blue;
+}*/
+
+body{
+    height: 400px;
+    width: 400px;
+    
+}
+
+
+.a{
+    height: 50%;
+    width: 50%;
+    background-color: blue;
+}
+
+.b{
+    height: 50%;
+    width: 50%;
+    background-color: red;
+}
+
+
+/* The area visible on browser is called the viewport. The viewport is the area of the window in which web content can be seen. The viewport does not include the browser's toolbars and scrollbars. The viewport is not necessarily the same size as the device screen. The viewport can be smaller than the device screen if the browser window is not maximized or if the user has zoomed in on the page. The viewport can also be larger than the device screen if the user has zoomed out on the page. */
+
+/* vw - viewport width
+vh - viewport height*/
+
+
+/* 1vw = 1% of the viewport width
+1vh = 1% of the viewport height */
