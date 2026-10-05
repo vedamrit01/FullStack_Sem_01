@@ -1,0 +1,29 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+div{
+    height: 250px;
+    width: 250px;
+    border: 4px solid brown;
+}
+
+.item-1{
+    background-color: aqua;
+    
+}
+.item-2{
+    background-color: violet;
+    position: absolute;   /*absolute position: the element is positioned relative to its nearest positioned ancestor*/
+    left: 100px;      /*its positioned relative to the nearest ancestor that has a position other than static. If no such ancestor exists, it will be positioned relative to the initial containing block (usually the viewport).*/
+    top: 100px;
+}
+.item-3{
+    background-color: yellow;
+    
+}
+
+
+
