@@ -1,0 +1,89 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+
+header{
+
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+
+    padding: 16px 24px;
+    background-color: blanchedalmond;
+    border-bottom: 1px solid #000;
+    align-items: baseline;
+
+}
+span{
+    background-color: #738bd1;
+}
+
+
+nav{
+    display:none;
+   /* display: flex;*/
+    gap: 16px;
+}
+
+button{
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #121f46;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+
+    transition-property: scale;
+    transition-duration: 0.5s;
+   
+}
+
+button:hover{
+    cursor: pointer;
+    color: whitesmoke;
+    background-color: #000;
+    scale: 1.2;
+    /*transition-property: scale;
+    transition-duration: 0.5s;*/        /*its better to use transition property in the main button selector rather than hover selector because it will be applied to both hover and unhover state*/
+}
+
+button:active{
+    background-color: #738bd1;
+    color: #000;
+    scale: 0.8;
+}
+
+main{
+    display: flex;
+    gap: 32px;
+    flex-direction: column;
+    padding: 16px 24px;
+    align-items: center;
+}
+
+
+div{
+    height: 200px;
+    width: 250px;
+    background-color: #1100ff;
+    border-bottom: 1px solid #000;
+   
+}
+
+
+
+
+@media (width>= 768px){
+    nav{
+        display: flex;
+    }
+    main{
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+ 
