@@ -1,0 +1,1134 @@
+<title>Python Notebook · Classes 1–8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a clean notebook — white sheets with a red margin line, one readable column, blue ink for writing; red pen only for traps, green pen only for rules. */
+:root{
+  --paper:#f4f5f7; --sheet:#ffffff; --rule:#e3e8f0; --margin:#efb8b8;
+  --ink:#0f1a3d; --head:#0b1430; --soft:#4f5870; --pen:#2546a8; --red:#c0333d; --green:#1f7a4a;
+  --code-bg:#f6f8fc; --code-edge:#d6deec; --shadow:0 1px 2px rgba(20,30,60,.06),0 6px 20px rgba(20,30,60,.06);
+  --f-head:"Caveat","Segoe Print",cursive;
+  --f-body:"Kalam","Segoe Print","Comic Sans MS",cursive;
+  --f-code:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+ 
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:19px;line-height:1.65;padding:0 16px 60px}
+.wrap{max-width:820px;margin:0 auto}
+h1,h2,h3,h4{font-family:var(--f-head);font-weight:700;line-height:1.15;text-wrap:balance;margin:0;color:var(--head)}
+p{margin:0}
+b,strong{color:var(--head)}
+code,.mono{font-family:var(--f-code);font-size:.78em;color:var(--head)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px;border-radius:4px}
+ 
+.cover{padding-block:36px 14px;display:grid;gap:8px}
+.cover .eyebrow{color:var(--soft);font-size:1rem}
+.cover h1{font-size:clamp(2.6rem,7vw,3.8rem)}
+.cover h1 .u{text-decoration:underline;text-decoration-color:var(--pen);text-decoration-thickness:2px;text-underline-offset:6px}
+.cover .sub{color:var(--soft);max-width:62ch}
+.legend{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:4px;font-size:1rem;color:var(--soft)}
+.legend .r,.legend .g{font-weight:700}
+ 
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);padding-block:10px;border-bottom:1px solid var(--rule);margin-bottom:22px}
+nav .row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav a{flex:none;font-size:1rem;text-decoration:none;color:var(--ink);border:1px solid var(--rule);border-radius:999px;padding:2px 12px;background:var(--sheet)}
+nav a:hover{border-color:var(--pen);color:var(--pen)}
+ 
+.sheet{background:var(--sheet);border-radius:4px;box-shadow:var(--shadow);padding:28px clamp(18px,4vw,44px) 30px clamp(30px,6vw,60px);margin-bottom:30px;position:relative;scroll-margin-top:64px}
+.sheet{line-height:32px;background-color:var(--sheet);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,#dbe5f3 31px,#dbe5f3 32px);background-position:0 20px}
+.note li{margin:0}
+.map,.pattern>div,.tbl table,.ladder span{background-color:var(--sheet)}
+.sheet::before{content:"";position:absolute;top:0;bottom:0;left:clamp(16px,3.5vw,34px);border-left:1.5px solid var(--margin)}
+.sheet-head{display:grid;gap:2px;margin-bottom:8px;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+.tag{font-family:var(--f-head);font-size:1.3rem;color:var(--pen)}
+.sheet h2{font-size:clamp(2rem,5vw,2.6rem)}
+.sheet .src{color:var(--soft);font-size:.9rem}
+.mod-divider{font-family:var(--f-head);font-size:2rem;color:var(--head);text-align:center;margin:8px 0 20px}
+.mod-divider small{display:block;font-family:var(--f-body);font-size:1rem;color:var(--soft)}
+ 
+.map{overflow-x:auto;margin:12px 0 22px;padding-block:6px;border-bottom:1px dashed var(--rule)}
+.map svg{display:block;width:100%;min-width:560px;height:auto}
+.map text{font-family:var(--f-head)}
+ 
+/* one clear column; .wide kept for compatibility */
+.grid{display:grid;grid-template-columns:1fr;gap:26px}
+.grid>*{min-width:0}
+.note{display:grid;gap:10px;align-content:start}
+.note h3{font-size:1.75rem;border-bottom:1.5px solid var(--rule);padding-bottom:2px}
+.note h3 .n{color:var(--pen);margin-right:6px}
+.note ul{margin:0;padding-left:1.2em}
+.note li{margin:4px 0}
+.note li::marker{color:var(--pen)}
+ 
+/* pens: only blue (ink), red (traps), green (rules) */
+.hl{font-weight:700;color:var(--head);text-decoration:underline;text-decoration-color:var(--pen);text-decoration-thickness:1.5px;text-underline-offset:3px}
+.hlp,.hlg,.hlb{font-weight:700;color:var(--head)}
+.r{color:var(--red)} .g{color:var(--green)}
+.b,.pu,.o,.t{color:var(--pen)}
+.big{font-family:var(--f-head);font-size:1.3em;font-weight:700}
+.arrow{color:var(--pen);font-family:var(--f-head);font-size:1.25em}
+ 
+pre{margin:0;background:var(--code-bg);color:var(--ink);font-family:var(--f-code);font-size:.74rem;line-height:1.6;padding:12px 16px;border:1px solid var(--code-edge);border-radius:6px;overflow-x:auto}
+pre .c{color:var(--soft)}
+pre .k{color:var(--pen);font-weight:600}
+pre .s{color:var(--green)}
+ 
+.trap,.remember{border-left:3px solid var(--red);padding:6px 0 6px 14px;display:grid;gap:4px}
+.trap b.lbl{font-family:var(--f-head);font-size:1.3rem;color:var(--red)}
+.remember{border-left-color:var(--green)}
+.remember b.lbl{font-family:var(--f-head);font-size:1.3rem;color:var(--green)}
+.takeaway{margin-top:26px;border-top:1px solid var(--rule);padding-top:12px}
+.takeaway b{font-family:var(--f-head);font-size:1.45rem;color:var(--green);margin-right:6px}
+ 
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--rule);padding:6px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-head);font-size:1.25rem;color:var(--head);border-bottom:1.5px solid var(--soft)}
+td code{white-space:nowrap}
+ 
+.ladder{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ladder span{border:1px solid var(--code-edge);background:var(--code-bg);border-radius:6px;padding:0 8px;font-family:var(--f-code);font-size:.78rem}
+.ladder i{color:var(--soft);font-style:normal}
+.pattern{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.pattern>div{border:1px solid var(--rule);border-radius:6px;padding:10px 12px;display:grid;gap:6px;align-content:start;min-width:0}
+.pattern h4{font-size:1.4rem;color:var(--pen)}
+footer{text-align:center;color:var(--soft);font-size:1rem}
+ 
+/* ---- ruled grid: every line of writing = 32px ---- */
+.sheet{font-size:20px;line-height:36px;font-weight:400;padding:36px clamp(18px,4vw,44px) 36px clamp(34px,6.5vw,64px);
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 35px,#cfdbee 35px,#cfdbee 36px);background-position:0 0}
+.sheet *{line-height:inherit}
+.sheet-head{gap:0;margin:0 0 36px;padding:0;border:0}
+.tag{font-size:1.5rem}
+.sheet .src{font-size:1rem}
+.sheet h2{font-size:2.7rem;line-height:72px}
+.grid{gap:36px}
+.note{gap:0}
+.note h3{font-size:2rem;line-height:36px;border:0;padding:0;margin-bottom:0}
+.note li{margin:0}
+.note ul{padding-left:1.1em}
+code,.mono{font-size:.8em}
+pre{font-size:14.5px;line-height:26px;font-weight:500;padding:4px 14px;border:0;box-shadow:inset 0 0 0 1px var(--code-edge);margin:4px 0}
+.trap,.remember{padding:0 0 0 14px;gap:0}
+.trap b.lbl,.remember b.lbl{font-size:1.55rem}
+.takeaway{margin-top:36px;border:0;padding:0}
+.takeaway b{font-size:1.55rem}
+.map{margin:0 0 36px;padding:0;border:0}
+.map svg{height:396px;min-width:560px}
+table{font-size:18px}
+th,td{padding:0 10px;border:0;box-shadow:inset 0 -1px 0 var(--rule)}
+th{font-size:1.25rem;box-shadow:inset 0 -1px 0 var(--soft)}
+.tbl{background:var(--sheet);box-shadow:inset 0 0 0 1px var(--code-edge);border-radius:6px}
+.pattern{gap:16px}
+.pattern>div{border:0;box-shadow:inset 0 0 0 1px var(--code-edge);padding:8px 12px;gap:0}
+.pattern h4{font-size:1.6rem}
+.pattern pre{margin:4px 0}
+.ladder{gap:6px;padding-block:4px}
+.ladder span{line-height:28px;font-size:.85rem}
+</style>
+ 
+<div class="wrap">
+<header class="cover">
+  <div class="eyebrow">Introduction to Programming · ZAICS01 · Sem 1</div>
+  <h1>My <span class="u">Python</span> Notebook</h1>
+  <p class="sub">Class-by-class notes for Module 01 (Programming Foundations) and Module 02 (Loops &amp; Iterative Thinking), built from the class revision sheets, guides, worksheets and the three reading materials.</p>
+  <div class="legend">
+    <span><span class="hl">underlined</span> = must remember</span>
+    <span><span class="r">red pen</span> = exam trap</span>
+    <span><span class="g">green pen</span> = rule / takeaway</span>
+        <span>grey box = code</span>
+  </div>
+</header>
+ 
+<nav aria-label="Classes"><div class="row">
+  <a href="#map">Big map</a><a href="#c1">Class 1</a><a href="#c2">Class 2</a><a href="#c3">Class 3</a><a href="#c4">Class 4</a><a href="#c5">Class 5</a><a href="#c6">Class 6</a><a href="#c7">Class 7</a><a href="#c8">Class 8</a><a href="#cheat">Cheat sheet</a>
+</div></nav>
+ 
+<!-- ============ BIG MAP ============ -->
+<section class="sheet" id="map">
+  <div class="sheet-head"><span class="tag">overview</span><h2>The whole course on one page</h2></div>
+  <div class="map" data-map="master"></div>
+  <p class="src">Read clockwise from the top: Classes 1–4 build the foundations (how code runs, types, operators), Classes 5–8 move to containers, decisions and the first loop.</p>
+</section>
+ 
+<div class="mod-divider">Module 01 · Programming Foundations<small>Classes 1 → 4</small></div>
+ 
+<!-- ============ CLASS 1 ============ -->
+<section class="sheet" id="c1">
+  <div class="sheet-head"><span class="tag">Class 1</span><h2>What is a program? How does code run?</h2>
+  <span class="src">Sources: Class 1 revision sheet · Modules &amp; __pycache__ class guide · Worksheet 1</span></div>
+  <div class="map" data-map="c1"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>Logic vs syntax</h3>
+      <ul>
+        <li>C, C++, Java, Python, JavaScript can all solve the <b>same</b> problem.</li>
+        <li><span class="hl">Logic is universal — syntax is just the costume</span> it wears in each language.</li>
+        <li>"Hello World" in 5 languages → same output. Three things differ: <b class="b">syntax</b>, the <b class="b">run command</b>, and <b class="b">how it executes</b> (compiled / interpreted / mixed).</li>
+        <li>Analogy: "I love you" in English or Hindi means the same thing, only the grammar changes.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>A program is just text in a file</h3>
+      <ul>
+        <li>File name = <b>name</b> + <b>.extension</b> → <code>hello_world.py</code></li>
+        <li>The name is arbitrary. The extension matters for most languages.</li>
+        <li><span class="g">Python is relaxed</span>: rename to <code>.txt</code> and it still runs — the interpreter only reads the text.</li>
+        <li><span class="r">C++ depends on the extension</span> to decide how to compile; <code>.txt</code> is rejected unless forced.</li>
+        <li>The contents must still be valid syntax for that language.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Programming language =</h3>
+      <p class="big pu">own vocabulary + grammar</p>
+      <p>Write text in a file → save it (supported extension) → run it with <b>that language's command</b>. A Python file can't be run with the Java command.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Source code → 0s and 1s</h3>
+      <ul>
+        <li>Hardware understands only <span class="hl">binary</span> (low / high voltage).</li>
+        <li><b>Source code</b> = high-level human-written text.</li>
+        <li>A <b class="b">translator</b> converts it: compiler, interpreter, or both (just-in-time).</li>
+        <li><b class="o">Bytecode</b> = in-between form: not binary yet, not readable source either.</li>
+      </ul>
+      <p class="arrow">source code ⟶ translator ⟶ bytecode / binary ⟶ hardware</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Modules &amp; import</h3>
+      <ul>
+        <li>Any <code>.py</code> file can be a <b>module</b> → <code>import arithmetics</code>, then use <code>arithmetics.sum(9, 8)</code>.</li>
+        <li><span class="hl">Importing ≠ calling</span>. <code>import</code> runs the module's <i>top-level</i> code; a function body runs only when you call it.</li>
+      </ul>
+<pre><span class="c"># triangle.py</span>
+<span class="k">def</span> area(base, alt):
+    print(<span class="s">"inside triangle"</span>)
+    <span class="k">return</span> 0.5 * base * alt
+ 
+<span class="c"># my_script.py</span>
+<span class="k">import</span> arithmetics, mensurations, triangle
+print(arithmetics.sum(9, 8))            <span class="c"># 17</span>
+print(mensurations.area_of_square(100)) <span class="c"># 10000</span>
+print(triangle.area(10, 10))            <span class="c"># inside triangle → 50.0</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>__pycache__ &amp; .pyc</h3>
+      <ul>
+        <li>When modules are imported, Python stores their compiled bytecode as <code>.pyc</code> files in <code>__pycache__/</code> (e.g. <code>triangle.cpython-314.pyc</code>; name depends on version).</li>
+        <li>Reason: <span class="g">later imports are faster</span> — cached bytecode is reused.</li>
+        <li><span class="r">The top-level script</span> (the file you pass to <code>python</code>) is <b>not</b> cached — it is recompiled fresh every run. Only imported modules get <code>.pyc</code>.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">7.</span>Process, PID &amp; the OS</h3>
+      <ul>
+        <li><b class="b">Process</b> = a running instance of a program. Run it twice → two processes, each with its own memory.</li>
+        <li><b class="b">PID</b> = unique number the OS gives each process. <code>os.getpid()</code> returns it; it changes every run.</li>
+        <li><b class="b">OS</b> loads the program into RAM, schedules it on a CPU core, allocates memory. It links program ↔ hardware.</li>
+        <li>You can match the PID in Task Manager (Ctrl+Shift+Esc).</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">8.</span>The PID demo</h3>
+<pre><span class="k">import</span> helper, shapes, time, os
+print(<span class="s">"PID demo running... (Ctrl+C to stop)"</span>)
+print(os.getpid())             <span class="c"># e.g. 15342</span>
+<span class="k">for</span> i <span class="k">in</span> range(60):           <span class="c"># i = 0 … 59</span>
+    print(helper.greet(<span class="s">"Zenith"</span>), <span class="s">"| square area:"</span>,
+          shapes.area_of_square(i))
+    time.sleep(1)              <span class="c"># pause ≈ 1 second</span></pre>
+      <p><b>Ctrl+C</b> sends an interrupt → Python raises <code class="r">KeyboardInterrupt</code> and stops.</p>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> A translator turns your source code into bytecode / binary, and the Operating System runs that as a process (with a PID) on your hardware.</p>
+</section>
+ 
+<!-- ============ CLASS 2 ============ -->
+<section class="sheet" id="c2">
+  <div class="sheet-head"><span class="tag">Class 2</span><h2>Inside Python · names · data types</h2>
+  <span class="src">Sources: Class 2 revision sheet · Worksheet 2 guide · Worksheet 2</span></div>
+  <div class="map" data-map="c2"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>What <code>python file.py</code> really does</h3>
+      <ul>
+        <li><code>python</code> is itself a program; your file is just its <b>input</b>.</li>
+        <li>Step 1 <b class="b">Translate</b> → readable code to bytecode. Step 2 <b class="b">Run</b> → interpreter executes the bytecode one instruction at a time.</li>
+        <li>Why translate first? <span class="hl">Speed</span> — meaning is worked out once, then the fast shorthand runs again and again (big win in loops).</li>
+        <li>Bytecode is executed <i>by the interpreter</i>; it is not raw machine code.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>"Python" is a bundle</h3>
+      <p class="big pu">interpreter + standard library + pip (+ site-packages)</p>
+      <ul>
+        <li><code>which python3</code> / <code>sys.executable</code> → the real interpreter file.</li>
+        <li><b class="g">Standard library</b>: ready-made modules (random, json, datetime, math). No download needed.</li>
+        <li><b class="o">Third-party</b> (e.g. emoji) → <code class="r">ModuleNotFoundError</code> until installed with pip; lands in site-packages.</li>
+        <li>Many Pythons can live side by side (<code>which -a python3</code>), each with its own interpreter, stdlib and pip.</li>
+        <li>Installer (website, one app at a time) vs package manager (brew, apt, conda — handles dependencies).</li>
+      </ul>
+      <div class="trap"><b class="lbl">!! pip trap</b><p><code>pip install X</code> may install into the wrong Python. Safer: <code class="hl">python3 -m pip install X</code> — always the Python you're running.</p></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Versions — MAJOR.MINOR.PATCH</h3>
+      <ul>
+        <li><b>PATCH</b> = bug/security fixes, always safe. <b>MINOR</b> = new features, ~yearly. <b>MAJOR</b> = breaking (Python 2 → 3).</li>
+        <li><span class="hl">Newer understands older; older can't understand newer.</span></li>
+        <li><code>match</code> was added in 3.10 → <code class="r">SyntaxError</code> on 3.9.</li>
+        <li>AI libraries (PyTorch, TensorFlow) support only specific versions → virtual environments later.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>IDEs &amp; online IDEs</h3>
+      <ul>
+        <li>IDE = editor + Run button + debugger + file explorer + terminal. A convenience layer, <b>not</b> a replacement for the interpreter.</li>
+        <li>Run button just types <code>python file.py</code> for you.</li>
+        <li><span class="r">"Works in Terminal, breaks in IDE"</span> → the two point at different Pythons. Fix: select the right interpreter or install the package there.</li>
+        <li>Colab / Replit: code runs on <b>someone else's computer</b>; needs internet; Colab gives free GPU.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Names &amp; <code>=</code></h3>
+      <ul>
+        <li>Python calls a variable a <b class="b">name</b> — a label on a value; can be reassigned. A literal like <code>6</code> never changes.</li>
+        <li><code>=</code> is <span class="hl">assignment, not equality</span>: compute the right side first, then store in the left.</li>
+        <li>A <b>statement</b> = one complete instruction (usually one per line).</li>
+      </ul>
+<pre>x = 6
+x = x + 1        <span class="c"># right side first → 7, then store in x</span>
+x = 7; y = 9     <span class="c"># two statements, one line</span>
+x, y = 7, 9      <span class="c"># multiple assignment</span>
+x=7              <span class="c"># spaces around = don't matter</span>
+  y = 9          <span class="c"># ✗ IndentationError (unexpected indent)</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>Data types</h3>
+      <div class="tbl"><table>
+        <tr><th>type</th><th>example</th></tr>
+        <tr><td class="b">int</td><td><code>7</code>, <code>-3</code></td></tr>
+        <tr><td class="b">float</td><td><code>3.14</code></td></tr>
+        <tr><td class="b">bool</td><td><code>True</code> / <code>False</code></td></tr>
+        <tr><td class="b">str</td><td><code>'a'</code>, <code>"apple"</code></td></tr>
+      </table></div>
+      <ul>
+        <li><code>type()</code>, <code>print()</code>, <code>len()</code> are <b>built-in functions</b>.</li>
+        <li><span class="r">No char type</span> — <code>'a'</code> is a str of length 1.</li>
+        <li><span class="hl">Dynamically typed</span>: <code>x = 7</code> then <code>x = "text"</code> is fine. C++/Java are <b>statically typed</b> (type fixed at declaration → compile error).</li>
+        <li>Dynamic = flexible, fast to write. Static = catches type mistakes earlier.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">7.</span>Operators</h3>
+      <ul>
+        <li>Operator = symbol; operands = the values. <code>+ - * /</code> are <b>binary</b> (two operands).</li>
+        <li>Computation happens on the <b>CPU</b>.</li>
+        <li><span class="hl"><code>/</code> always gives a float</span>: <code>6 / 2 → 3.0</code></li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">8.</span>Type conversion</h3>
+      <p><b class="g">Implicit</b> (Python does it): climbs the ladder <span class="big pu">int → float → complex</span>. <code>10 + 0.0 → 10.0</code></p>
+      <p><b class="o">Explicit</b> (you do it): <code>int()</code>, <code>float()</code>, <code>str()</code></p>
+<pre>int(3.9)        <span class="c"># 3   ← truncates, does NOT round</span>
+int(<span class="s">"42"</span>)       <span class="c"># 42</span>
+int(<span class="s">"3.14"</span>)     <span class="c"># ✗ ValueError</span>
+int(<span class="s">"256tydv"</span>)  <span class="c"># ✗ ValueError</span>
+float(<span class="s">"3.14"</span>)   <span class="c"># 3.14</span></pre>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Python translates code to bytecode and runs it step by step; "Python" is interpreter + stdlib + pip; names can be reassigned and even change type; conversion is implicit (automatic) or explicit (on purpose).</p>
+</section>
+ 
+<!-- ============ CLASS 3 ============ -->
+<section class="sheet" id="c3">
+  <div class="sheet-head"><span class="tag">Class 3</span><h2>Errors · % and // · precedence · math &amp; random</h2>
+  <span class="src">Sources: Class 3 revision sheet · Worksheet 3</span></div>
+  <div class="map" data-map="c3"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>Compile-time vs runtime</h3>
+      <div class="tbl"><table>
+        <tr><th>Compile-time</th><th>Runtime</th></tr>
+        <tr><td>found while translating, <b>before any line runs</b></td><td>found while the line runs; <b>earlier lines already printed</b></td></tr>
+        <tr><td><code class="r">SyntaxError</code>, <code class="r">IndentationError</code> (bad grammar: missing <code>)</code> or <code>:</code>)</td><td><code class="r">NameError</code>, <code class="r">TypeError</code>, <code class="r">ZeroDivisionError</code>, <code class="r">ValueError</code></td></tr>
+      </table></div>
+<pre>print <span class="s">"Hello!"</span>   <span class="c"># SyntaxError → NOTHING runs</span>
+Print(<span class="s">"Hello!"</span>)  <span class="c"># valid grammar, but Print doesn't exist</span>
+               <span class="c"># → NameError at runtime (lines above print)</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>NameError &amp; the "declaration" myth</h3>
+      <ul>
+        <li>Using a never-assigned name → <code class="r">NameError: name 'score' is not defined</code>.</li>
+        <li><code>age: int</code> is only a <b>type annotation</b>. It reserves nothing; <code>print(age)</code> still → NameError.</li>
+        <li><span class="hl">A name exists only after you assign to it.</span></li>
+      </ul>
+      <div class="remember"><b class="lbl">Why C++ catches it earlier</b>
+        <p><b>C++:</b> name = fixed memory slot + fixed type, decided at compile time → undeclared name or <code>string + int</code> fails before running.</p>
+        <p><b>Python:</b> name = label in a live dictionary, no fixed type, looked up at run time → only checked when the line runs.</p></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Divide by zero</h3>
+      <ul>
+        <li><code>total / 0</code> → <code class="r">ZeroDivisionError: division by zero</code> (runtime).</li>
+        <li><code>7 % 0</code> → <code class="r">integer modulo by zero</code>. <code>8 // 0</code> → same family.</li>
+        <li>No defined answer in maths, so Python refuses to guess. (USS Yorktown, 1997: a stray 0 → division by zero → ship dead in the water.)</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Modulo <code>%</code> = remainder</h3>
+      <p>By hand: <code>rem = x - int(x/y) * y</code> → <code>35 % 19 = 16</code></p>
+<pre>17 % 5   <span class="c"># 2</span>
+20 % 4   <span class="c"># 0  → divides evenly</span>
+5 % 8    <span class="c"># 5  → divisor bigger, whole number is left</span>
+n % 2 == 0      <span class="c"># even check</span>
+n % 10          <span class="c"># last digit</span>
+(10 + 5) % 12   <span class="c"># 3 → clock wrap-around</span></pre>
+      <p><span class="hl"><code>x % y == 0</code> means y divides x exactly.</span></p>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Floor division <code>//</code> &amp; negatives</h3>
+      <ul>
+        <li><code>19 / 7 → 2.714…</code> (float) · <code>19 // 7 → 2</code> (int).</li>
+        <li><b>Positives:</b> <code>int(x/y)</code> and <code>x//y</code> agree.</li>
+        <li><b>Negatives:</b> <code>int()</code> truncates toward 0, <code>//</code> floors toward −∞.</li>
+      </ul>
+<pre>int(-19/7)  <span class="c"># -2  (truncate)</span>
+-19 // 7    <span class="c"># -3  (floor)</span>
+-19 % 7     <span class="c"># 2   ← sign of the DIVISOR</span>
+19 % -7     <span class="c"># -2</span></pre>
+      <div class="trap"><b class="lbl">!! remainder sign</b><p>The remainder always takes the <b>sign of the divisor</b> (bottom number). The hand formula gives <code>-5</code> for <code>-19, 7</code>; Python's <code>%</code> gives <code>2</code>. Trust <code>//</code> and <code>%</code>.</p></div>
+      <p class="hl">Identity that never lies: <code>x == (x // y) * y + (x % y)</code></p>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>// and % on floats · widest type</h3>
+      <ul>
+        <li>Same rules, only the result <b>type</b> changes.</li>
+        <li><span class="hl">Widest-operand rule</span>: result takes the widest type (int &lt; float &lt; complex). <code>/</code> always floats.</li>
+      </ul>
+<pre>24 // 6     <span class="c"># 4    int</span>
+24 // 6.0   <span class="c"># 4.0  float</span>
+7.5 % 2     <span class="c"># 1.5</span>
+450.0 % 360.0  <span class="c"># 90.0 → wrap an angle</span>
+26.5 % 24.0    <span class="c"># 2.5  → 24-hour clock</span>
+3.75 % 1.0     <span class="c"># 0.75 → fractional part</span></pre>
+    </div>
+    <div class="note wide">
+      <h3><span class="n">7.</span>Precedence, power <code>**</code> &amp; brackets</h3>
+      <div class="ladder"><span>( )</span><i>›</i><span>** (right→left)</span><i>›</i><span>unary -x</span><i>›</i><span>* / // %</span><i>›</i><span>+ -</span><i>›</i><span>= (last)</span></div>
+<pre>2 + 3 * 4     <span class="c"># 14 (not 20)</span>
+2 * 3 ** 2    <span class="c"># 18 → ** first</span>
+10 - 3 - 2    <span class="c"># 5  → left to right</span>
+2 ** 3 ** 2   <span class="c"># 512 → ** is RIGHT to left: 2 ** 9</span>
+-2 ** 2       <span class="c"># -4  → -(2**2)  ;  (-2) ** 2 = 4</span>
+a = 2 + 3 * 4 <span class="c"># 14 → = happens last</span></pre>
+      <p><span class="big g">Golden rule:</span> when in doubt, use brackets. Brackets are free; confusion is expensive.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">8.</span>Big ints never overflow</h3>
+      <ul>
+        <li><code>2 ** 100</code> → exact 31 digits. <code>2 ** 1000</code> → exact 302 digits. Limit = memory only.</li>
+        <li><b>C++</b> int = fixed 4 bytes (max ≈ 2.1 billion). One more → silently wraps to most negative = <span class="r">overflow</span> (21! prints negative).</li>
+        <li><b>Python (CPython)</b> grows the storage digit by digit.</li>
+        <li>Matters for cryptography, factorials/combinatorics, correctness.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">9.</span>Built-ins &amp; math</h3>
+<pre>abs(-7)       <span class="c"># 7</span>
+pow(2, 3)     <span class="c"># 8 (= 2 ** 3)</span>
+max(3,7,2)    <span class="c"># 7     min(3,7,2) → 2</span>
+round(2.5)    <span class="c"># 2  ← banker's rounding (to even)</span>
+round(3.5)    <span class="c"># 4     round(0.5) → 0</span>
+round(3.14159, 2)  <span class="c"># 3.14</span>
+ 
+<span class="k">import</span> math
+math.sqrt(16)      <span class="c"># 4.0  (sqrt(16) alone → NameError)</span>
+math.floor(2.7), math.ceil(2.1)   <span class="c"># 2, 3</span>
+math.factorial(5), math.gcd(12, 18), math.pi</pre>
+      <p>Built-ins are always there; a <b>module</b> is a toolbox you must <code>import</code> first.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">10.</span>random (pseudo-random)</h3>
+<pre><span class="k">import</span> random
+random.randint(1, 6)    <span class="c"># 1..6, BOTH ends included</span>
+random.random()         <span class="c"># 0 ≤ x &lt; 1</span>
+random.choice([<span class="s">"a"</span>,<span class="s">"b"</span>])  <span class="c"># one item</span>
+random.seed(42)         <span class="c"># same sequence every time</span></pre>
+      <p>Computers use a formula from a starting <b>seed</b> → "pseudo-random". <span class="hl">Fixed seed = reproducible ML experiments.</span></p>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Only grammar is checked before running; names, types and zero-division fail while running. % and // floor (remainder follows the divisor), results widen to the broadest type, ** is tightest and right-to-left, ints grow instead of overflowing, and modules are imported toolboxes.</p>
+</section>
+ 
+<!-- ============ CLASS 4 ============ -->
+<section class="sheet" id="c4">
+  <div class="sheet-head"><span class="tag">Class 4</span><h2>Booleans · logic · bits · floats</h2>
+  <span class="src">Sources: Class 4 revision sheet · Worksheet 4 · Reading 2 (Floating Point Numbers)</span></div>
+  <div class="map" data-map="c4"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>Comments</h3>
+      <ul>
+        <li><code>#</code> → rest of the line ignored (removed before bytecode).</li>
+        <li><span class="hl">Explain WHY, not WHAT.</span></li>
+        <li>Comment-out a line to switch it off while debugging.</li>
+        <li>No true multi-line comment. <code>"""…"""</code> is a string thrown away — its real job is a <b>docstring</b>.</li>
+        <li>Editor shortcut: select lines → <b>Ctrl + /</b> (Cmd + / on Mac).</li>
+      </ul>
+<pre>seconds = days * 86400  <span class="c"># 86400 = seconds in one day  ✓</span>
+seconds = days * 86400  <span class="c"># multiply days by 86400     ✗ useless</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>Comparisons → bool</h3>
+      <p class="big b"><code>==  !=  &lt;  &gt;  &lt;=  &gt;=</code></p>
+      <ul>
+        <li>They <b>judge</b> and return <code>True</code>/<code>False</code>; <code>type(7 &gt; 3)</code> → <code>bool</code>.</li>
+        <li>Spelled <code>&lt;=</code> / <code>&gt;=</code>, never <code>=&lt;</code>.</li>
+        <li>Arithmetic runs first: <code>2 + 3 &lt; 4 + 1</code> → <code>5 &lt; 5</code> → False.</li>
+      </ul>
+      <div class="trap"><b class="lbl">!! = vs ==</b><p><code>=</code> is a command (assign). <code>==</code> is a question (equal?).</p></div>
+      <p><span class="hl">bool is a kind of int</span>: <code>True == 1</code>, <code>False == 0</code>, <code>True + True → 2</code>. Summing booleans = counting Trues.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>and · or · not · truthiness</h3>
+      <ul>
+        <li><b>and</b> → both true. <b>or</b> → at least one (inclusive). <b>not</b> → flips.</li>
+        <li><b class="r">Falsy:</b> <code>0</code>, <code>0.0</code>, <code>""</code>, <code>None</code> (and empty containers). Everything else truthy — <code>-1</code> is truthy!</li>
+        <li><span class="hl">and/or return an operand</span>, not always True/False: <b>or</b> → first truthy (else last); <b>and</b> → first falsy (else last).</li>
+        <li><b>Short-circuit</b>: stop as soon as the answer is known.</li>
+        <li>Precedence: <b>not › and › or</b>.</li>
+      </ul>
+<pre>0 <span class="k">or</span> 5             <span class="c"># 5</span>
+name <span class="k">or</span> <span class="s">"Guest"</span>      <span class="c"># default-value trick</span>
+print(5 <span class="k">or</span> (1/0))    <span class="c"># 5 — 1/0 never evaluated</span>
+True <span class="k">or</span> False <span class="k">and</span> False  <span class="c"># True → or (False and False)</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Operators across types</h3>
+<pre><span class="s">"2"</span> + <span class="s">"3"</span>      <span class="c"># "23"   join</span>
+<span class="s">"ha"</span> * 3       <span class="c"># "hahaha" repeat</span>
+<span class="s">"-"</span> * 30       <span class="c"># divider line</span>
+<span class="s">"hello"</span> - <span class="s">"o"</span>  <span class="c"># ✗ TypeError (- and / not defined)</span>
+<span class="s">"123"</span> == 4     <span class="c"># False, no error</span>
+<span class="s">"123"</span> + 4      <span class="c"># ✗ TypeError: can only concatenate str</span>
+<span class="s">"123"</span> + str(4) <span class="c"># "1234"</span>
+int(<span class="s">"123"</span>) + 4 <span class="c"># 127</span>
+[1,2] + [3,4]   <span class="c"># [1, 2, 3, 4]</span>
+[1,2] * 3       <span class="c"># [1, 2, 1, 2, 1, 2]</span></pre>
+      <p><b class="pu">Operator overloading</b>: each type has its own rulebook for an operator. Python's philosophy: <span class="hl">explicit is better than implicit</span> (JavaScript silently gives <code>"1234"</code>).</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Binary numbers</h3>
+      <ul>
+        <li>Positional, base 2, digits 0/1: <code>1101 = 8+4+0+1 = 13</code>.</li>
+        <li>Decimal → binary: divide by 2, collect remainders, <b>read bottom to top</b>.</li>
+        <li>Landmarks: 1, 2, 4, 8, 16, 32, 64, 128, 256.</li>
+      </ul>
+<pre>13÷2 = 6 r1
+ 6÷2 = 3 r0      ↑ read upward → 1101
+ 3÷2 = 1 r1
+ 1÷2 = 0 r1
+bin(42), oct(42), hex(42)  <span class="c"># '0b101010','0o52','0x2a'</span>
+int(<span class="s">"101010"</span>, 2)          <span class="c"># 42</span>
+0b101010 == 0o52 == 0x2a == 42   <span class="c"># True</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>Bitwise operators</h3>
+<pre>13 &amp; 10   <span class="c"># 1101 &amp; 1010 = 1000 → 8   (both 1)</span>
+12 | 10   <span class="c"># 1100 | 1010 = 1110 → 14  (any 1)</span>
+a ^ a     <span class="c"># 0   ;  a ^ 0 → a       (different → 1)</span>
+5 &lt;&lt; 2    <span class="c"># 20  → × 2²</span>
+7 &gt;&gt; 1    <span class="c"># 3   → // 2 (floors)</span>
+n &amp; 1     <span class="c"># 1 = odd, 0 = even</span>
+perms = READ | WRITE        <span class="c"># bit flags</span>
+bool(perms &amp; READ)          <span class="c"># is READ set?</span></pre>
+      <div class="trap"><b class="lbl">!! &amp; | vs and or</b><p><code>5 and 3 → 3</code> (logical, short-circuits, returns operand). <code>5 &amp; 3 → 1</code> (bit by bit, always int). XOR is its own inverse → used in encryption: <code>(a ^ key) ^ key == a</code>.</p></div>
+    </div>
+    <div class="note wide">
+      <h3><span class="n">7.</span>Floats: why 0.1 + 0.2 ≠ 0.3</h3>
+      <div class="grid">
+        <div class="note">
+          <ul>
+            <li><code>0.1 + 0.2 → 0.30000000000000004</code>; <code>== 0.3</code> is <b class="r">False</b>. Happens in every language.</li>
+            <li>A float is always <b>64 bits</b> → most decimals are stored as the <b>nearest value</b>.</li>
+            <li>A fraction ends in binary only if its denominator is a power of 2. <code>1/10 = 1/(2×5)</code> — the 5 makes <code>0.0001100110011…</code> repeat forever.</li>
+            <li><b class="b">IEEE 754</b>: <span class="hlb">1 sign</span> + <span class="hlg">11 exponent</span> + <span class="hlp">52 mantissa</span> bits. Leading 1 is not stored → 53 bits of precision ≈ 15–17 digits.</li>
+            <li>0.1 and 0.2 are stored slightly <b>above</b>, 0.3 slightly <b>below</b>.</li>
+            <li><code>print(0.3)</code> shows the <b>shortest text</b> that maps to the same bits — short print ≠ exact.</li>
+          </ul>
+        </div>
+        <div class="note">
+<pre><span class="k">import</span> math
+math.isclose(0.1 + 0.2, 0.3)     <span class="c"># True  ✓ compare like this</span>
+f<span class="s">"{0.1 + 0.2:.1f}"</span>               <span class="c"># '0.3' for display</span>
+(0.1 + 0.2) + 0.3   <span class="c"># 0.6000000000000001</span>
+0.1 + (0.2 + 0.3)   <span class="c"># 0.6  → not associative!</span>
+round(2.675, 2)     <span class="c"># 2.67, not 2.68</span>
+ 
+<span class="k">from</span> decimal <span class="k">import</span> Decimal
+Decimal(<span class="s">"0.1"</span>) + Decimal(<span class="s">"0.2"</span>)  <span class="c"># 0.3 exact → money</span>
+Decimal(0.1)        <span class="c"># keeps the float's error!</span>
+<span class="k">from</span> fractions <span class="k">import</span> Fraction
+Fraction(1,10) + Fraction(2,10)  <span class="c"># 3/10</span></pre>
+          <div class="trap"><b class="lbl">!! never == on floats</b><p>Use <code>math.isclose</code>. Adding 0.1 ten times gives 0.9999999999999999, so a <code>while x != 1.0</code> loop may never stop. Money → <code>Decimal</code>. Exact: <code>0.5, 0.25, 0.75</code>; inexact: <code>0.1, 0.2, 0.3</code>.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note wide">
+      <h3><span class="n">8.</span>The full precedence ladder</h3>
+      <div class="ladder"><span>( )</span><i>›</i><span>**</span><i>›</i><span>+x -x</span><i>›</i><span>* / // %</span><i>›</i><span>+ -</span><i>›</i><span>&lt;&lt; &gt;&gt;</span><i>›</i><span>&amp;</span><i>›</i><span>^</span><i>›</i><span>|</span><i>›</i><span>== != &lt; &gt; &lt;= &gt;=</span><i>›</i><span>not</span><i>›</i><span>and</span><i>›</i><span>or</span><i>›</i><span>=</span></div>
+<pre>not 2 == 1     <span class="c"># True  → not (2 == 1)      footgun 1</span>
+3 &lt;&lt; 1 + 1     <span class="c"># 12    → 3 &lt;&lt; (1+1)        footgun 2</span>
+12 &amp; 10 == 8   <span class="c"># True  → (12 &amp; 10) == 8    footgun 3 (opposite in C!)</span></pre>
+      <p>Mnemonic: <span class="big pu">Brackets → Power → Maths → Shifts → Bits (&amp; ^ |) → Compare → not/and/or → assign</span></p>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Comments explain why; comparisons make booleans that and/or/not combine (truthiness, operand return, short-circuit); each type overloads operators; ints are bits you can mask and shift; floats are 64-bit approximations, so use math.isclose; and brackets always win.</p>
+</section>
+ 
+<div class="mod-divider">Module 02 · Loops &amp; Iterative Thinking<small>Classes 5 → 8 + Readings 1–3</small></div>
+ 
+<!-- ============ CLASS 5 ============ -->
+<section class="sheet" id="c5">
+  <div class="sheet-head"><span class="tag">Class 5</span><h2>Collections · lists, sets, strings, tuples</h2>
+  <span class="src">Sources: Class 5 revision sheet · Worksheet 5 (RapidKart lab) · Reading 1 (Names, Values &amp; Objects) · Reading 3 (Strings)</span></div>
+  <div class="map" data-map="c5"></div>
+  <div class="grid">
+    <div class="note wide">
+      <h3><span class="n">1.</span>The container table</h3>
+      <div class="tbl"><table>
+        <tr><th></th><th>str <code>"..."</code></th><th>list <code>[...]</code></th><th>tuple <code>(..,)</code></th><th>set <code>{...}</code></th></tr>
+        <tr><td>ordered / indexable</td><td class="g">yes</td><td class="g">yes</td><td class="g">yes</td><td class="r">no (by hash)</td></tr>
+        <tr><td>mutable</td><td class="r">no</td><td class="g">yes</td><td class="r">no</td><td class="g">yes</td></tr>
+        <tr><td>duplicates</td><td>yes</td><td>yes</td><td>yes</td><td class="r">removed</td></tr>
+        <tr><td>hashable</td><td class="g">yes</td><td class="r">no</td><td class="g">yes*</td><td class="r">no</td></tr>
+        <tr><td><code>x in c</code></td><td>O(n) substring</td><td>O(n)</td><td>O(n)</td><td class="hl">O(1) avg</td></tr>
+        <tr><td>use when</td><td>fixed text</td><td>order + index, changes</td><td>fixed record</td><td>exists? / unique</td></tr>
+      </table></div>
+      <p class="src">* a tuple is hashable only if everything inside it is: <code>hash((1,[2,3]))</code> → TypeError.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>Traps to know cold</h3>
+      <div class="trap"><b class="lbl">!! {} is a dict</b><p><code>type({})</code> → dict. Empty set = <code class="hl">set()</code>.</p></div>
+      <div class="trap"><b class="lbl">!! sets can't be indexed</b><p><code>tags[1]</code> → TypeError: 'set' object is not subscriptable.</p></div>
+      <div class="trap"><b class="lbl">!! (1) is not a tuple</b><p><code>type((1))</code> → int. The <b>comma</b> makes it: <code>(1,)</code>.</p></div>
+      <div class="trap"><b class="lbl">!! sort() returns None</b><p><code>sorted(nums)</code> → new list, original unchanged. <code>nums.sort()</code> → sorts in place, returns <b>None</b>.</p></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Mutable vs immutable · hashable</h3>
+<pre>s = <span class="s">"hello"</span>; s[0] = <span class="s">"H"</span>   <span class="c"># ✗ TypeError: no item assignment</span>
+lst = [10,20,30]; lst[0] = 99  <span class="c"># ✓ [99, 20, 30]</span>
+{1, 2, 2, 3, 3, 3}            <span class="c"># {1, 2, 3}</span>
+s.add((10, 20))   <span class="c"># ✓ tuple is hashable</span>
+s.add([1, 2])     <span class="c"># ✗ unhashable type: 'list'</span></pre>
+      <p><b class="g">Hashable</b> = Python can compute a stable fingerprint. Immutable built-ins (int, float, bool, str, tuple) are hashable; mutable ones (list, set, dict) are not, because a hash must never change.</p>
+      <p>Lists are <b>heterogeneous</b>: <code>[42, "hi", True, 3.14, [1,2]]</code> is legal (Java/C++ arrays hold one type).</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Names are labels, not boxes <span class="o">(Reading 1)</span></h3>
+<pre>a = [1, 2, 3]
+b = a            <span class="c"># second LABEL, same list</span>
+b.append(4)
+print(a, b)      <span class="c"># [1,2,3,4] [1,2,3,4]</span>
+ 
+s = <span class="s">"hello"</span>; t = s
+t = t + <span class="s">" world"</span>  <span class="c"># + builds a NEW string</span>
+print(s, t)      <span class="c"># hello hello world</span>
+ 
+b = a[:]  <span class="c"># or list(a) → a real copy</span></pre>
+      <ul>
+        <li><code>==</code> same value? · <code>is</code> same object? → <code>[10,20] == [10,20]</code> True, <code>is</code> False.</li>
+        <li>Small int cache −5…256 → <code>is</code> may be True by accident. <span class="hl">Use <code>is</code> only for None.</span></li>
+        <li>Reference count hits 0 → object freed. <code>id(x)</code> identifies the object.</li>
+        <li>A tuple fixes <i>which</i> objects it holds: <code>t=(1,2,[3]); t[2].append(4)</code> works.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Indexing &amp; slicing</h3>
+<pre>s = <span class="s">"PYTHON"</span>
+<span class="c">#    P  Y  T  H  O  N</span>
+<span class="c">#    0  1  2  3  4  5</span>
+<span class="c">#   -6 -5 -4 -3 -2 -1</span>
+s[0], s[-1]  <span class="c"># 'P', 'N'</span>
+s[1:4]       <span class="c"># 'YTH' → start in, stop OUT</span>
+s[:3], s[3:] <span class="c"># 'PYT', 'HON'</span>
+s[-3:]       <span class="c"># 'HON' last 3</span>
+s[::2]       <span class="c"># 'PTO'</span>
+s[::-1]      <span class="c"># 'NOHTYP' reverse</span>
+s[10]        <span class="c"># ✗ IndexError</span>
+s[10:20]     <span class="c"># ''  → slices never error</span>
+s = <span class="s">"J"</span> + s[1:] <span class="c"># 'JYTHON' build a new one</span></pre>
+      <p><span class="hl"><code>len(s[i:j]) == j − i</code></span> (half-open range). <code>-n</code> = <code>len(s) − n</code>.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>String methods (always return NEW)</h3>
+<pre><span class="s">" hi "</span>.strip()           <span class="c"># 'hi'   (lstrip / rstrip)</span>
+<span class="s">"  hello   world "</span>.split() <span class="c"># ['hello','world']</span>
+<span class="s">"A101,Laptop,5"</span>.split(<span class="s">","</span>) <span class="c"># ['A101','Laptop','5'] all str!</span>
+<span class="s">"-a-"</span>.split(<span class="s">"-"</span>)        <span class="c"># ['', 'a', '']</span>
+msg.replace(<span class="s">"l"</span>, <span class="s">"L"</span>)    <span class="c"># replaces EVERY l</span>
+raw.strip().lower()       <span class="c"># chaining, left → right</span>
+<span class="s">"-"</span>.join([<span class="s">"a"</span>,<span class="s">"b"</span>,<span class="s">"c"</span>])   <span class="c"># 'a-b-c'</span>
+<span class="s">"hello"</span>.count(<span class="s">"l"</span>)        <span class="c"># 2</span>
+<span class="s">"hello"</span>.find(<span class="s">"z"</span>)         <span class="c"># -1 (index() → ValueError)</span>
+s.upper()                 <span class="c"># s unchanged unless s = s.upper()</span></pre>
+      <ul>
+        <li>Split pieces = <b>separators + 1</b>. No-arg split collapses whitespace.</li>
+        <li><code>ord('A')=65 … 'Z'=90</code>, <code>ord('a')=97 … 'z'=122</code>; <code>chr(66)='B'</code>.</li>
+        <li>Strings compare by code numbers → <code>"Z" &lt; "a"</code> True; compare <code>.lower()</code> to ignore case.</li>
+        <li>Build strings with <code>"".join(parts)</code> instead of <code>+=</code> in a loop.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">7.</span>List &amp; set methods</h3>
+<pre>lst.append(x)   <span class="c"># add to end</span>
+lst.pop()       <span class="c"># remove + return last</span>
+lst.pop(i)      <span class="c"># remove + return index i</span>
+lst.remove(v)   <span class="c"># first matching VALUE, else ValueError</span>
+ 
+a | b   <span class="c"># union        a.union(b)</span>
+a &amp; b   <span class="c"># intersection a.intersection(b)</span>
+a - b   <span class="c"># difference   (a-b ≠ b-a)</span>
+s.discard(x)  <span class="c"># safe, no error if missing</span>
+s.remove(x)   <span class="c"># KeyError if missing</span>
+ 
+matrix = [[1,2,3],[4,5,6],[7,8,9]]
+matrix[1][2]  <span class="c"># 6 → row 1, column 2</span></pre>
+      <p>Watched both shows → <b>&amp;</b> · watched A, recommend B → <b>A − B</b> · total audience → <b>|</b></p>
+    </div>
+    <div class="note wide">
+      <h3><span class="n">8.</span>Lessons from the RapidKart debugging lab</h3>
+      <div class="pattern">
+        <div><h4>Bit mask ≠ 1</h4><p><code>flags &amp; ADMIN_BIT</code> gives 0 or 4, never 1. Test <code>!= 0</code>.</p></div>
+        <div><h4>str + int</h4><p>Crash. Use <code>str(n)</code> or an f-string.</p></div>
+        <div><h4>list for "unique"</h4><p>Counts repeats silently. Use a <code>set()</code>.</p></div>
+        <div><h4>{} footgun</h4><p>dict has no <code>.add()</code> → AttributeError.</p></div>
+        <div><h4>float ==</h4><p><code>0.1+0.2 == 0.3</code> False → <code>math.isclose</code>.</p></div>
+        <div><h4>// for averages</h4><p>Chops the paise. Use <code>/</code>.</p></div>
+        <div><h4>s[0] = ...</h4><p>Strings are immutable → <code>s[0].upper() + s[1:]</code>.</p></div>
+        <div><h4>or vs and</h4><p>"out of stock <b>and</b> not premium" — <code>or</code> over-flags everything.</p></div>
+      </div>
+      <p><span class="hl">3 bugs crash (TypeError / AttributeError); 5 run silently and give wrong answers — the silent ones are the dangerous ones.</span></p>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Strings and tuples are immutable and hashable, lists are ordered and mutable, sets give up order and duplicates for O(1) lookups; slices include start and exclude stop; string methods and sorted() return new things while list methods mutate in place.</p>
+</section>
+ 
+<!-- ============ CLASS 6 ============ -->
+<section class="sheet" id="c6">
+  <div class="sheet-head"><span class="tag">Class 6</span><h2>Under the hood · input/output · if / elif / else</h2>
+  <span class="src">Sources: Worksheet 6 (CPython memory model, I/O) · Class 6 Part C revision sheet (if/elif/else)</span></div>
+  <div class="map" data-map="c6"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>A list is an array of pointers</h3>
+      <ul>
+        <li>Every slot stores a <b>memory address</b> (8 bytes on 64-bit), not the value.</li>
+        <li>That's why one list can hold mixed types.</li>
+        <li><b class="b">Over-allocation</b>: <code>sys.getsizeof(lst)</code> jumps only at some lengths — CPython reserves spare slots so most appends don't resize (cheap on average).</li>
+      </ul>
+<pre><span class="k">import</span> sys
+<span class="k">for</span> i <span class="k">in</span> range(17):
+    lst.append(i)
+    print(len(lst), sys.getsizeof(lst))  <span class="c"># size grows in steps</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>A string is a compact array</h3>
+      <ul>
+        <li>Characters stored <b>directly</b>, no pointers → compact.</li>
+        <li>CPython scans the string and uses the <span class="hl">widest code point</span> to pick bytes per char for <b>every</b> char: ≤255 → 1 byte · ≤65535 → 2 · else 4.</li>
+        <li><code>sys.getsizeof("hello")</code> = 46 → 40-byte header + 5×1 + 1 null.</li>
+        <li>Header holds refcount, type, length (so <code>len()</code> is O(1)), cached hash, flags.</li>
+        <li>Immutability makes fixed width possible.</li>
+      </ul>
+<pre>ord(<span class="s">'😀'</span>)        <span class="c"># 128512</span>
+hex(128512)      <span class="c"># '0x1f600' → U+1F600</span>
+<span class="c"># 1×16⁴ + 15×16³ + 6×16² = 65536+61440+1536</span></pre>
+      <p><b class="pu">Unicode</b> defines the <b>number</b>; the <b>font</b> defines the picture (that's why emoji look different on iPhone vs Android).</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>A set is a hash table</h3>
+      <ul>
+        <li>slot = <code>hash(x) mod table_size</code> → check one slot → O(1).</li>
+        <li>Kept ~⅔ full; when fuller, rebuilt at double size (O(n) once, O(1) average).</li>
+        <li><span class="r">Trade-off</span>: faster lookup, <b>more memory</b> than a list.</li>
+        <li><code>hash(42)</code> is stable; <code>hash("hello")</code> changes between runs (randomised for security); <code>hash([1,2])</code> → TypeError.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>input() &amp; print()</h3>
+<pre>x = input(<span class="s">"Enter: "</span>)    <span class="c"># ALWAYS a str</span>
+x + 10                  <span class="c"># ✗ TypeError</span>
+x = int(input())        <span class="c"># "hello" → ValueError</span>
+price = float(input())
+m, n = map(int, input().split())  <span class="c"># two ints, one line</span>
+ 
+print(<span class="s">"Mon"</span>,<span class="s">"Tue"</span>, sep=<span class="s">" | "</span>)   <span class="c"># Mon | Tue</span>
+print(<span class="s">"Loading"</span>, end=<span class="s">""</span>)       <span class="c"># no newline</span>
+print(2026, 6, 26, sep=<span class="s">"/"</span>)   <span class="c"># 2026/6/26</span>
+<span class="k">with</span> open(<span class="s">"out.txt"</span>,<span class="s">"w"</span>) <span class="k">as</span> f:
+    print(<span class="s">"Hi"</span>, file=f)        <span class="c"># same print, to a file</span></pre>
+      <p><code>input()</code> reads <b>stdin</b>, <code>print()</code> writes <b>stdout</b>. Console, file and network are all <span class="hl">byte streams</span>.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>f-string format specs</h3>
+<pre>f<span class="s">"{pi:.2f}"</span>         <span class="c"># 3.14</span>
+f<span class="s">"{1400000000:,}"</span>   <span class="c"># 1,400,000,000</span>
+f<span class="s">"{name:&lt;15}"</span>       <span class="c"># left-align in 15 chars</span>
+f<span class="s">"{price:&gt;8.2f}"</span>    <span class="c"># right-align, 8 wide, 2 dp</span>
+f<span class="s">"{n:04d}"</span>          <span class="c"># 0001, 0012, 0123</span>
+f<span class="s">"{75000:,.2f}"</span>     <span class="c"># 75,000.00</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>Indentation is the block</h3>
+      <ul>
+        <li>Java/C++ use <code>{ }</code>; <span class="hl">Python uses indentation only</span>.</li>
+        <li>No indent after <code>:</code> → <code class="r">IndentationError: expected an indented block</code>.</li>
+        <li>Mixed 2 / 4 spaces → <code class="r">unindent does not match…</code></li>
+        <li><code>pass</code> = placeholder that does nothing.</li>
+        <li><code>else</code>/<code>elif</code> must come <b>right after</b> its if-block, same level; anything between → <code class="r">SyntaxError</code>.</li>
+      </ul>
+    </div>
+    <div class="note wide">
+      <h3><span class="n">7.</span>The five shapes of conditions</h3>
+      <div class="pattern">
+        <div><h4>Simple if</h4><p>One check, one branch. <i>Vote eligibility, discount.</i></p><pre><span class="k">if</span> age &gt;= 18:
+    print(<span class="s">"can vote"</span>)</pre></div>
+        <div><h4>if / else</h4><p>Exactly <b>one</b> of two runs.</p><pre><span class="k">if</span> n % 2 == 0:
+    print(<span class="s">"even"</span>)
+<span class="k">else</span>:
+    print(<span class="s">"odd"</span>)</pre></div>
+        <div><h4>elif ladder</h4><p>Ordered bands, <b>stops at first True</b>. Order matters.</p><pre><span class="k">if</span> s &gt;= 90: g = <span class="s">"A"</span>
+<span class="k">elif</span> s &gt;= 80: g = <span class="s">"B"</span>
+<span class="k">elif</span> s &gt;= 70: g = <span class="s">"C"</span>
+<span class="k">else</span>: g = <span class="s">"F"</span></pre></div>
+        <div><h4>Independent ifs</h4><p>Each checked; zero, some or all can run. <i>Tags, badges.</i></p><pre><span class="k">if</span> n &gt; 0: print(<span class="s">"positive"</span>)
+<span class="k">if</span> n % 2 == 0: print(<span class="s">"even"</span>)
+<span class="k">if</span> n &gt; 100: print(<span class="s">"large"</span>)</pre></div>
+        <div><h4>Nested if</h4><p>Second check only makes sense after the first. <i>Loan: age then income; quadrant.</i></p><pre><span class="k">if</span> x &gt; 0:
+    <span class="k">if</span> y &gt; 0: print(<span class="s">"Q1"</span>)
+    <span class="k">else</span>: print(<span class="s">"Q4"</span>)</pre></div>
+      </div>
+      <p><span class="big g">Choose:</span> must outcomes be mutually exclusive? → if/else or elif. Can several be true independently? → separate ifs.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">8.</span>The if / if-not anti-pattern</h3>
+<pre>stock = 8
+<span class="k">if</span> stock &lt; 10: print(<span class="s">"Low stock!"</span>)
+stock = 15               <span class="c"># value changes…</span>
+<span class="k">if not</span> (stock &lt; 10): print(<span class="s">"Fine"</span>)
+<span class="c"># BOTH print ✗  → use one if / else ✓</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">9.</span>Slab bills &amp; max without max()</h3>
+<pre>remaining, bill = units, 0.0
+<span class="k">if</span> remaining &gt; 300:
+    bill += (remaining - 300) * R4; remaining = 300
+<span class="k">if</span> remaining &gt; 200:
+    bill += (remaining - 200) * R3; remaining = 200
+<span class="k">if</span> remaining &gt; 100:
+    bill += (remaining - 100) * R2; remaining = 100
+bill += remaining * R1       <span class="c"># top slab → down</span>
+ 
+big = a                      <span class="c"># assume first is answer</span>
+<span class="k">if</span> b &gt; big: big = b
+<span class="k">if</span> c &gt; big: big = c</pre>
+      <p>Each rate applies only to the <b>portion in that slab</b> (same idea for income tax).</p>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Lists store pointers, strings store compact characters, sets store a hash table; input() always gives a str; indentation alone makes a block; pick if/else or elif for exactly-one outcomes and separate ifs for independent ones.</p>
+</section>
+ 
+<!-- ============ CLASS 7 ============ -->
+<section class="sheet" id="c7">
+  <div class="sheet-head"><span class="tag">Class 7</span><h2>Decision making · tricky problem patterns</h2>
+  <span class="src">Source: Class 7 worksheet (Codeforces / LeetCode style problems with trap solutions)</span></div>
+  <div class="map" data-map="c7"></div>
+  <div class="grid">
+    <div class="note wide">
+      <h3><span class="n">1.</span>Three kinds of wrong</h3>
+      <div class="tbl"><table>
+        <tr><th>Error type</th><th>What it means</th></tr>
+        <tr><td class="r">Syntax error</td><td>Python can't even parse it (indentation, missing colon, keyword typo)</td></tr>
+        <tr><td class="o">Logic error</td><td>Runs, but wrong answers for some inputs</td></tr>
+        <tr><td class="pu">Edge case missing</td><td>Mostly right, fails on one boundary input (n = 1, 0, odd sizes…)</td></tr>
+      </table></div>
+      <p>Method for every problem: <span class="hl">trap → diagnose → correct code → proof it is always right</span>.</p>
+    </div>
+    <div class="note wide">
+      <h3><span class="n">2.</span>Pattern cards</h3>
+      <div class="pattern">
+        <div><h4>Pair counting</h4><p>A domino covers 2 cells → max dominoes on m×n board:</p><pre>print(m * n // 2)</pre><p>Odd area leaves one cell.</p></div>
+        <div><h4>in is case-sensitive</h4><p>Letter in "codeforces"? Use the exact lowercase word — <code>"Codeforces"</code> misses <code>c</code>.</p><pre>print(<span class="s">"YES"</span> <span class="k">if</span> c <span class="k">in</span> <span class="s">"codeforces"</span> <span class="k">else</span> <span class="s">"NO"</span>)</pre></div>
+        <div><h4>Use a deal only if cheaper</h4><p>Pair costs b, single a. Promotion helps only when <code>b &lt; 2a</code>.</p><pre>pair = min(b, 2 * a)
+print((n // 2) * pair + (n % 2) * a)</pre></div>
+        <div><h4>Two rectangles in a square</h4><p>a×1 and b×1 stacked → width max(a,b), height 2.</p><pre>print(max(max(a, b), 2))</pre></div>
+        <div><h4>Alternating sum</h4><p>1−2+3−4… pairs each give −1.</p><pre><span class="k">if</span> n % 2 == 0: print(-(n // 2))   <span class="c"># 4 → -2</span>
+<span class="k">else</span>: print((n + 1) // 2)          <span class="c"># 5 → 3</span></pre></div>
+        <div><h4>Ceiling with integers</h4><p>Flagstones a×a on n×m. Floor of area is wrong.</p><pre>rows = (n + a - 1) // a   <span class="c"># ceil(n/a)</span>
+cols = (m + a - 1) // a
+print(rows * cols)</pre></div>
+        <div><h4>Undo pairwise sums</h4><p>b1+b2+b3 = 2·(a1+a2+a3) → don't forget ÷2.</p><pre>s = (b1 + b2 + b3) // 2
+print(s - b3, s - b2, s - b1)</pre></div>
+        <div><h4>Game theory: parity</h4><p>Divisor game: even n → pick 1, always hand an odd number back.</p><pre>print(<span class="s">"Alice"</span> <span class="k">if</span> n % 2 == 0 <span class="k">else</span> <span class="s">"Bob"</span>)</pre></div>
+        <div><h4>Game theory: Nim</h4><p>Take 1–3 stones. Multiples of 4 are losing positions.</p><pre>print(<span class="s">"Lose"</span> <span class="k">if</span> n % 4 == 0 <span class="k">else</span> <span class="s">"Win"</span>)</pre></div>
+      </div>
+    </div>
+    <div class="note wide">
+      <div class="remember"><b class="lbl">How to prove a solution</b><p>Check the base cases by hand (n = 1, 2, 3…), find the pattern, then argue it holds for every n (e.g. Nim: from n%4 = r, take r stones and the opponent lands on a multiple of 4). A proof beats "it passed the samples".</p></div>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Most tricky problems are one formula plus one edge case — reach for //, % and min/max, convert ceilings to (n + a − 1) // a, and test the smallest inputs before trusting a pattern.</p>
+</section>
+ 
+<!-- ============ CLASS 8 ============ -->
+<section class="sheet" id="c8">
+  <div class="sheet-head"><span class="tag">Class 8</span><h2>Doing it again · the while loop</h2>
+  <span class="src">Source: Class 8 worksheet (while loops, loop bugs, coding problems)</span></div>
+  <div class="map" data-map="c8"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>What a while loop does</h3>
+      <p>Runs a block <b>again and again as long as the condition is True</b>. Write the action once; change <code>5</code> to <code>1000</code> by editing one character.</p>
+<pre>i = 1             <span class="c"># INITIALISE</span>
+<span class="k">while</span> i &lt;= 5:     <span class="c"># CONDITION</span>
+    print(i)      <span class="c"># BODY</span>
+    i += 1        <span class="c"># UPDATE</span>
+<span class="c"># 1 2 3 4 5</span></pre>
+      <p class="big pu">4 parts: initialise → condition → body → update</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>Condition is checked at the TOP</h3>
+      <ul>
+        <li>Checked <b>before every pass</b>, including the first.</li>
+        <li>False the first time → body runs <span class="hl">zero times</span>.</li>
+        <li>The loop variable ends <b>past</b> the boundary (the failing check is what stops it).</li>
+      </ul>
+<pre>n = 0
+<span class="k">while</span> n &gt; 0:          <span class="c"># False at once</span>
+    print(<span class="s">"body"</span>)
+print(<span class="s">"done"</span>)          <span class="c"># only "done"</span>
+ 
+i = 2
+<span class="k">while</span> i &lt;= 8:
+    print(i); i += 2   <span class="c"># 2 4 6 8</span>
+print(i)               <span class="c"># 10, not 8</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Countdown</h3>
+<pre>n = 5
+<span class="k">while</span> n &gt;= 1:
+    print(n)
+    n -= 1
+print(<span class="s">"liftoff"</span>)       <span class="c"># n is 0 here</span></pre>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Two classic loop bugs</h3>
+      <div class="trap"><b class="lbl">!! infinite loop</b><p>Missing <b>update</b> → condition always True. Stop with Ctrl+C; a judge reports <b>Time Limit Exceeded</b>.</p><pre>i = 1
+<span class="k">while</span> i &lt;= 3:
+    print(i)     <span class="c"># forgot i += 1</span></pre></div>
+      <div class="trap"><b class="lbl">!! off-by-one</b><p><code>while i &lt; 10</code> prints 1–9 (misses 10). Include endpoint → <code>&lt;=</code>, exclude → <code>&lt;</code>. Doesn't crash, so only testing catches it.</p></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>while True + break · sentinel</h3>
+<pre><span class="k">while</span> True:
+    cmd = input(<span class="s">"cmd&gt; "</span>)
+    <span class="k">if</span> cmd == <span class="s">"quit"</span>:     <span class="c"># sentinel value</span>
+        print(<span class="s">"bye"</span>)
+        <span class="k">break</span>             <span class="c"># the ONLY way out</span>
+    print(<span class="s">"you said:"</span>, cmd)
+ 
+<span class="k">while</span> True:
+    <span class="k">if</span> input() == <span class="s">"open sesame"</span>:
+        print(<span class="s">"unlocked"</span>); <span class="k">break</span>
+    print(<span class="s">"wrong, try again"</span>)</pre>
+      <p><code>break</code> sits inside an <code>if</code>, otherwise the loop ends on the first pass. <code>while not count == 0</code> means <code>while not (count == 0)</code>.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>Pull a number apart</h3>
+<pre>n = 4729
+<span class="k">while</span> n &gt; 0:
+    digit = n % 10    <span class="c"># last digit</span>
+    print(digit)      <span class="c"># 9 2 7 4</span>
+    n = n // 10       <span class="c"># drop last digit</span></pre>
+      <p><span class="hl"><code>n % 10</code> → last digit · <code>n // 10</code> → remove it</span></p>
+    </div>
+    <div class="note wide">
+      <h3><span class="n">7.</span>Core loop programs</h3>
+      <div class="pattern">
+        <div><h4>Multiplication table</h4><pre>i = 1
+<span class="k">while</span> i &lt;= 10:
+    print(f<span class="s">"{n} x {i} = {n*i}"</span>)
+    i += 1</pre></div>
+        <div><h4>All factors</h4><pre>i = 1
+<span class="k">while</span> i &lt;= n:
+    <span class="k">if</span> n % i == 0:
+        print(i)
+    i += 1</pre></div>
+        <div><h4>Factorial (start at 1!)</h4><pre>fact, i = 1, 1     <span class="c"># 0 → always 0 ✗</span>
+<span class="k">while</span> i &lt;= n:
+    fact *= i
+    i += 1
+print(fact)        <span class="c"># 0! = 1 ✓</span></pre></div>
+        <div><h4>Prime check · flag + break</h4><pre>is_prime = n &gt; 1    <span class="c"># 1 is not prime</span>
+i = 2
+<span class="k">while</span> i &lt; n:
+    <span class="k">if</span> n % i == 0:
+        is_prime = False
+        <span class="k">break</span>          <span class="c"># verdict known</span>
+    i += 1
+print(<span class="s">"prime"</span> <span class="k">if</span> is_prime <span class="k">else</span> <span class="s">"not prime"</span>)</pre></div>
+        <div><h4>Max of K numbers (may be negative)</h4><pre>k = int(input())
+best = int(input())  <span class="c"># NOT 0</span>
+k -= 1
+<span class="k">while</span> k &gt; 0:
+    x = int(input())
+    <span class="k">if</span> x &gt; best: best = x
+    k -= 1
+print(best)</pre></div>
+        <div><h4>Use a tool by its contract</h4><pre>total = 0
+<span class="k">while</span> src.has_next():
+    total += src.next_token()
+print(total)   <span class="c"># [] → 0</span></pre></div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="remember"><b class="lbl">Construct vs technique</b><p><b>Construct</b> (<code>while</code>, <code>if</code>, <code>break</code>) = given by the language, learned once per language. <b>Technique</b> (the <b>flag</b>, accumulator, running max) = invented by you, works in every language. Knowing <code>while</code> makes you a Python user; inventing the flag makes you a problem solver.</p></div>
+    </div>
+    <div class="note">
+      <div class="remember"><b class="lbl">Real-world skills</b><p>Ask what's missing in a vague spec (can numbers be negative? how many? empty input?). Read a traceback even when code is hidden: results 20.0, 40.0, 12.0 for inputs 6, 3, 10 → hidden line is <code>120 / x</code>, so the 4th input was 0 → ZeroDivisionError.</p></div>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> A while loop = initialise, condition (checked at the top, every pass), body, update; forget the update and it never stops, pick &lt; vs &lt;= wrong and it's off by one; while True needs a break, and flags remember results across passes.</p>
+</section>
+ 
+<!-- ============ CHEAT SHEET ============ -->
+<section class="sheet" id="cheat">
+  <div class="sheet-head"><span class="tag">exam eve</span><h2>Last-minute cheat sheet</h2></div>
+  <div class="grid">
+    <div class="note">
+      <h3>Errors → when → cause</h3>
+      <div class="tbl"><table>
+        <tr><th>Error</th><th>Cause</th></tr>
+        <tr><td><code>SyntaxError</code></td><td>bad grammar, missing <code>:</code> <code>)</code>; dangling else (compile-time)</td></tr>
+        <tr><td><code>IndentationError</code></td><td>unexpected / missing / mixed indent</td></tr>
+        <tr><td><code>NameError</code></td><td>name never assigned, <code>Print</code>, <code>sqrt</code> without math</td></tr>
+        <tr><td><code>TypeError</code></td><td><code>"a"+1</code>, <code>s[0]="x"</code>, <code>set[0]</code>, unhashable list</td></tr>
+        <tr><td><code>ValueError</code></td><td><code>int("3.14")</code>, <code>lst.remove(missing)</code></td></tr>
+        <tr><td><code>ZeroDivisionError</code></td><td><code>/ 0</code>, <code>% 0</code>, <code>// 0</code></td></tr>
+        <tr><td><code>IndexError</code></td><td><code>s[10]</code> on short string</td></tr>
+        <tr><td><code>KeyError</code></td><td><code>set.remove(missing)</code></td></tr>
+        <tr><td><code>AttributeError</code></td><td><code>{}.add()</code> — dict has no add</td></tr>
+        <tr><td><code>ModuleNotFoundError</code></td><td>package not installed for this Python</td></tr>
+      </table></div>
+    </div>
+    <div class="note">
+      <h3>Quick outputs to remember</h3>
+<pre>6 / 2          <span class="c"># 3.0</span>
+int(3.9)       <span class="c"># 3</span>
+-19 // 7       <span class="c"># -3</span>
+-19 % 7        <span class="c"># 2</span>
+2 ** 3 ** 2    <span class="c"># 512</span>
+-2 ** 2        <span class="c"># -4</span>
+round(2.5)     <span class="c"># 2</span>
+0 or 5         <span class="c"># 5</span>
+5 and 3        <span class="c"># 3</span>
+5 &amp; 3          <span class="c"># 1</span>
+True + True    <span class="c"># 2</span>
+"ha" * 3       <span class="c"># 'hahaha'</span>
+0.1 + 0.2      <span class="c"># 0.30000000000000004</span>
+type({})       <span class="c"># dict</span>
+type((1,))     <span class="c"># tuple</span>
+"PYTHON"[1:4]  <span class="c"># 'YTH'</span>
+nums.sort()    <span class="c"># None</span>
+bin(13)        <span class="c"># '0b1101'</span></pre>
+    </div>
+    <div class="note wide">
+      <h3>Precedence (top binds tightest)</h3>
+      <div class="ladder"><span>( )</span><i>›</i><span>** ←</span><i>›</i><span>-x</span><i>›</i><span>* / // %</span><i>›</i><span>+ -</span><i>›</i><span>&lt;&lt; &gt;&gt;</span><i>›</i><span>&amp;</span><i>›</i><span>^</span><i>›</i><span>|</span><i>›</i><span>comparisons</span><i>›</i><span>not</span><i>›</i><span>and</span><i>›</i><span>or</span><i>›</i><span>=</span></div>
+    </div>
+  </div>
+</section>
+ 
+<footer>made for exam prep · Modules 01–02 · Introduction to Programming</footer>
+</div>
+ 
+ 
+<script>
+const MAPS = {
+  master:{c:"Python · Modules 1–2", b:[
+    ["Class 1","how code runs"],["Class 2","types & names"],["Class 3","errors, % //"],["Class 4","bools & bits"],
+    ["Class 5","collections"],["Class 6","memory, I/O, if"],["Class 7","problem patterns"],["Class 8","while loops"]]},
+  c1:{c:"What is a program?", b:[
+    ["Logic vs syntax","same idea, new costume"],["Text in a file","name + .extension"],["Translator","compiler / interpreter / JIT"],
+    ["Bytecode",".pyc in __pycache__"],["Modules","import ≠ call"],["Process & PID","os.getpid(), OS runs it"]]},
+  c2:{c:"Inside Python", b:[
+    ["Run = 2 steps","translate → run"],["The bundle","interpreter+stdlib+pip"],["Versions","MAJOR.MINOR.PATCH"],
+    ["IDEs","Run = python file.py"],["Names & =","x = x + 1"],["Types","int float bool str"],["Conversion","implicit / explicit"]]},
+  c3:{c:"Errors & Division", b:[
+    ["Compile vs run","SyntaxError first"],["NameError","no declaration"],["Modulo %","remainder"],
+    ["Floor //","sign of divisor"],["Precedence","** right → left"],["Big ints","no overflow"],["math & random","import, seed"]]},
+  c4:{c:"Booleans & Bits", b:[
+    ["Comments","why, not what"],["Comparisons","== != < > <= >="],["and or not","truthiness"],
+    ["Overloading","str + and *"],["Binary","base 2, bin()"],["Bitwise","& | ^ << >>"],["Floats","isclose, IEEE 754"]]},
+  c5:{c:"Collections", b:[
+    ["str","immutable, slicing"],["list","mutable, ordered"],["tuple","fixed record, (1,)"],
+    ["set","unique, O(1) in"],["Labels","is vs =="],["Methods","split, sort, |"],["RapidKart","8 silent bugs"]]},
+  c6:{c:"Under the hood", b:[
+    ["list","pointer array"],["str","compact, Unicode"],["set","hash table"],
+    ["input()","always str"],["print / f-str","sep, end, :.2f"],["if / elif / else","5 shapes"],["Slabs","top-down peel"]]},
+  c7:{c:"Tricky decisions", b:[
+    ["Error types","syntax / logic / edge"],["Ceiling","(n+a-1)//a"],["min / max","use deal if cheaper"],
+    ["Parity","n % 2"],["Nim","n % 4"],["Proof","base cases → pattern"]]},
+  c8:{c:"while loop", b:[
+    ["4 parts","init, cond, body, update"],["Check at top","may run 0 times"],["Infinite loop","forgot update"],
+    ["Off-by-one","< vs <="],["break","while True + sentinel"],["Digits","n%10, n//10"],["Flag","prime check"]]}
+};
+const COLORS=["--pen"];
+const NS="http://www.w3.org/2000/svg";
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function draw(host,data){
+  const W=720,H=400,cx=W/2,cy=H/2,n=data.b.length,rx=250,ry=140;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Mind map: "+data.c+" — "+data.b.map(b=>b[0]).join(", ")});
+  const lines=el("g",{},svg), nodes=el("g",{},svg);
+  data.b.forEach((b,i)=>{
+    const ang=-Math.PI/2+i*2*Math.PI/n, col=`var(${COLORS[i%COLORS.length]})`;
+    let x=cx+rx*Math.cos(ang), y=cy+ry*Math.sin(ang);
+    const w=Math.max(b[0].length*10.5, b[1].length*8.2)+26, h=50;
+    x=Math.min(Math.max(x,w/2+6),W-w/2-6); y=Math.min(Math.max(y,h/2+6),H-h/2-6);
+    const mx=(cx+x)/2+(y-cy)*0.18, my=(cy+y)/2-(x-cx)*0.12;
+    el("path",{d:`M${cx} ${cy} Q${mx} ${my} ${x} ${y}`,fill:"none",stroke:col,"stroke-width":1.6,"stroke-linecap":"round"},lines);
+    el("rect",{x:x-w/2,y:y-h/2,width:w,height:h,rx:14,fill:"var(--sheet)",stroke:col,"stroke-width":1.4},nodes);
+    const t1=el("text",{x:x,y:y-3,"text-anchor":"middle","font-size":21,"font-weight":700,fill:"var(--head)"},nodes);t1.textContent=b[0];
+    const t2=el("text",{x:x,y:y+17,"text-anchor":"middle","font-size":15,fill:"var(--soft)"},nodes);t2.textContent=b[1];
+  });
+  const cw=data.c.length*12+50;
+  el("ellipse",{cx:cx,cy:cy,rx:cw/2,ry:36,fill:"var(--sheet)",stroke:"var(--head)","stroke-width":2},nodes);
+  const ct=el("text",{x:cx,y:cy+8,"text-anchor":"middle","font-size":25,"font-weight":700,fill:"var(--ink)"},nodes);ct.textContent=data.c;
+  host.appendChild(svg);
+}
+document.querySelectorAll("[data-map]").forEach(h=>{const d=MAPS[h.dataset.map]; if(d) draw(h,d)});
+ 
+/* keep writing on the ruled lines: round boxed blocks up to whole 32px lines */
+const LINE=36;
+function snap(){
+  const sel=".sheet pre:not(.pattern pre), .sheet .tbl, .sheet .pattern, .sheet .ladder, .sheet .trap, .sheet .remember";
+  const els=[...document.querySelectorAll(sel)];
+  const depth=e=>{let d=0;while(e=e.parentElement)d++;return d};
+  els.sort((a,b)=>depth(b)-depth(a));
+  els.forEach(e=>{e.style.marginBottom=""});
+  els.forEach(e=>{
+    const cs=getComputedStyle(e), mt=parseFloat(cs.marginTop)||0, mb=parseFloat(cs.marginBottom)||0;
+    const total=mt+e.getBoundingClientRect().height+mb;
+    const extra=Math.ceil(total/LINE-0.01)*LINE-total;
+    e.style.marginBottom=(mb+extra)+"px";
+  });
+}
+let t; const run=()=>{clearTimeout(t);t=setTimeout(snap,60)};
+snap(); window.addEventListener("resize",run);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(snap);
+</script>
+ 

@@ -1,0 +1,765 @@
+<title>Communication Notebook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@300;400;700&display=swap">
+<style>
+/* Layout: one column of lightly mint-tinted ruled sheets on a grey desk. Five pens with fixed jobs (blue = writing, red = traps/errors, green = rules/correct, purple = frameworks & key terms, orange = examples) plus a yellow highlighter for must-remember lines. Single light theme by choice: it is paper. */
+:root{
+  --desk:#e6e9ee; --sheet:#f1f8f3; --line:#cfe2d6; --margin:#eab0b0; --edge:#dbe7df;
+  --ink:#16213f; --soft:#556070;
+  --blue:#1f4fb8; --red:#c42d39; --green:#17703f; --purple:#6a3c9e; --orange:#b85d0a;
+  --hilite:rgba(255,226,64,.62); --box:#fbfdfb;
+  --f-head:"Caveat","Segoe Print",cursive;
+  --f-body:"Kalam","Segoe Print","Comic Sans MS",cursive;
+  --L:36px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--desk);color:var(--ink);font-family:var(--f-body);font-size:19px;line-height:1.6;padding:0 16px 60px}
+.wrap{max-width:840px;margin:0 auto}
+h1,h2,h3,h4{font-family:var(--f-head);font-weight:700;margin:0;color:var(--ink);text-wrap:balance}
+p{margin:0}
+b,strong{font-weight:700}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+ 
+/* pens */
+.b{color:var(--blue)} .r{color:var(--red)} .g{color:var(--green)} .p{color:var(--purple)} .o{color:var(--orange)}
+.hl{background:linear-gradient(100deg,transparent 0 1%,var(--hilite) 3% 96%,transparent 99%);padding:0 3px;border-radius:3px;font-weight:700}
+.ul{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.ul.r{text-decoration-color:var(--red)} .ul.g{text-decoration-color:var(--green)} .ul.p{text-decoration-color:var(--purple)}
+.circ{border:2px solid var(--purple);border-radius:50% 45% 52% 48%/55% 50% 45% 50%;padding:0 6px;color:var(--purple);font-weight:700}
+s.x{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px;color:var(--soft)}
+.big{font-family:var(--f-head);font-size:1.35em;font-weight:700}
+.arrow{font-family:var(--f-head);font-size:1.3em;color:var(--blue)}
+ 
+/* cover */
+.cover{padding-block:36px 14px;display:grid;gap:6px}
+.cover .eyebrow{color:var(--soft);font-size:1rem}
+.cover h1{font-size:clamp(2.6rem,7vw,3.9rem);line-height:1.05}
+.cover h1 .u{text-decoration:underline;text-decoration-color:var(--purple);text-decoration-thickness:3px;text-underline-offset:7px}
+.cover .sub{color:var(--soft);max-width:64ch}
+.legend{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:6px;font-size:1rem}
+.legend span{white-space:nowrap}
+.pattern-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pattern-row span{font-family:var(--f-head);font-weight:700;font-size:1.3rem;background:var(--sheet);border:1.5px solid var(--edge);border-radius:999px;padding:0 14px}
+ 
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--desk);padding-block:10px;margin-bottom:20px;border-bottom:1px solid #d3d8e0}
+nav .row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav a{flex:none;font-size:1rem;text-decoration:none;color:var(--ink);border:1px solid #cfd5de;border-radius:999px;padding:2px 12px;background:var(--sheet)}
+nav a:hover{border-color:var(--blue);color:var(--blue)}
+ 
+/* sheet: ruled, tinted, red margin */
+.sheet{position:relative;background-color:var(--sheet);border-radius:4px;box-shadow:0 1px 2px rgba(20,30,60,.07),0 8px 22px rgba(20,30,60,.08);
+  margin-bottom:30px;scroll-margin-top:64px;font-size:20px;line-height:var(--L);
+  padding:var(--L) clamp(16px,4vw,44px) var(--L) clamp(34px,6.5vw,64px);
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 35px,var(--line) 35px,var(--line) 36px)}
+.sheet::before{content:"";position:absolute;top:0;bottom:0;left:clamp(16px,3.5vw,34px);border-left:1.5px solid var(--margin)}
+.sheet *{line-height:inherit}
+.sheet-head{display:grid;margin-bottom:var(--L)}
+.tag{font-family:var(--f-head);font-size:1.5rem;color:var(--purple)}
+.sheet h2{font-size:clamp(2.2rem,5.5vw,2.75rem);line-height:72px}
+.src{color:var(--soft);font-size:1rem}
+.divider{font-family:var(--f-head);font-size:2rem;text-align:center;margin:6px 0 18px}
+.divider small{display:block;font-family:var(--f-body);font-size:1rem;color:var(--soft)}
+ 
+.map{overflow-x:auto;margin-bottom:var(--L)}
+.map svg{display:block;width:100%;min-width:580px;height:396px}
+.map text{font-family:var(--f-head)}
+ 
+.grid{display:grid;gap:var(--L)}
+.grid>*{min-width:0}
+.note h3{font-size:2rem;line-height:var(--L)}
+.note h3 .n{color:var(--blue);margin-right:6px}
+.note ul,.note ol{margin:0;padding-left:1.15em}
+.note li::marker{color:var(--blue)}
+.note ol li::marker{font-weight:700}
+ 
+.trap,.rule,.ex{padding-left:14px;border-left:3px solid var(--red)}
+.rule{border-left-color:var(--green)}
+.ex{border-left-color:var(--orange)}
+.lbl{font-family:var(--f-head);font-size:1.5rem;font-weight:700}
+.trap .lbl{color:var(--red)} .rule .lbl{color:var(--green)} .ex .lbl{color:var(--orange)}
+.takeaway{margin-top:var(--L)}
+.takeaway b{font-family:var(--f-head);font-size:1.55rem;color:var(--green);margin-right:6px}
+ 
+.tbl{overflow-x:auto;background:var(--box);border-radius:6px;box-shadow:inset 0 0 0 1px var(--edge)}
+table{border-collapse:collapse;width:100%;font-size:18px}
+th,td{padding:0 10px;text-align:left;vertical-align:top;box-shadow:inset 0 -1px 0 var(--edge)}
+th{font-family:var(--f-head);font-size:1.3rem;color:var(--purple);box-shadow:inset 0 -1.5px 0 var(--purple)}
+ 
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.cards>div{background:var(--box);border-radius:6px;box-shadow:inset 0 0 0 1px var(--edge);padding:6px 12px;min-width:0}
+.cards h4{font-size:1.6rem}
+ 
+.fix{display:grid;grid-template-columns:auto 1fr;column-gap:10px}
+.fix .m{font-weight:700}
+ 
+details{background:var(--box);border-radius:6px;box-shadow:inset 0 0 0 1px var(--edge);padding:0 12px}
+summary{cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";color:var(--blue)}
+details[open] summary::before{content:"▾ "}
+details .ans{color:var(--green)}
+.hint{color:var(--soft);font-size:1rem}
+.passage{background:var(--box);border-radius:6px;box-shadow:inset 0 0 0 1px var(--edge);padding:0 14px;font-size:19px}
+ 
+footer{text-align:center;color:var(--soft);font-size:1rem}
+@media (max-width:520px){.sheet{font-size:18px}.note h3{font-size:1.75rem}}
+</style>
+ 
+<div class="wrap">
+<header class="cover">
+  <div class="eyebrow">Communication · Zenith School of AI · Mid-Semester</div>
+  <h1>My <span class="u">Communication</span> Notebook</h1>
+  <p class="sub">Exam notes built on the mid-sem syllabus (RC, Error Spotting, Group Presentation, Subjective Questions) and the listed resources: communication basics and styles, conversation, body language, SCQA, Power of 3, Pyramid Principle, emails, business writing and pronunciation.</p>
+  <div class="pattern-row" aria-label="Examination pattern"><span>1 · Reading Comprehension</span><span>2 · Written Assessment</span><span>3 · Speaking Assessment</span><span>4 · Presentation</span></div>
+  <div class="legend">
+    <span class="b">blue pen = notes</span>
+    <span class="r">red pen = trap / error</span>
+    <span class="g">green pen = rule / correct</span>
+    <span class="p">purple pen = framework / key term</span>
+    <span class="o">orange pen = example</span>
+    <span><span class="hl">highlighter</span> = must remember</span>
+  </div>
+</header>
+ 
+<nav aria-label="Sections"><div class="row">
+  <a href="#map">Big map</a><a href="#basics">Basics</a><a href="#rc">RC</a><a href="#errors">Error spotting</a><a href="#writing">Written</a><a href="#speaking">Speaking</a><a href="#present">Presentation</a><a href="#cheat">Exam eve</a>
+</div></nav>
+ 
+<!-- ============ MAP ============ -->
+<section class="sheet" id="map">
+  <div class="sheet-head"><span class="tag">overview</span><h2>The whole paper on one page</h2></div>
+  <div class="map" data-map="master"></div>
+  <p class="src">Four assessments, six sheets. Basics feeds all four; each later sheet maps to one part of the exam.</p>
+</section>
+ 
+<!-- ============ BASICS ============ -->
+<section class="sheet" id="basics">
+  <div class="sheet-head"><span class="tag">Sheet 1 · foundation</span><h2>What communication really is</h2>
+  <span class="src">Resources: Communication Intro (skillsyouneed) · Communication Styles (asana)</span></div>
+  <div class="map" data-map="basics"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>Definition</h3>
+      <p>Communication = <span class="hl">transfer of meaning AND understanding</span> between people. If the receiver didn't understand, it didn't happen. It is <b class="g">two-way</b> — feedback closes the loop.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>The process</h3>
+      <p class="arrow">Sender → <span class="p">encode</span> → message → <span class="p">channel</span> → <span class="p">decode</span> → receiver → <span class="p">feedback</span> ↺</p>
+      <p><span class="r">Noise</span> can enter at any step: a loud room, jargon, a bad mood, a weak signal.</p>
+      <p class="o">e.g. Manager emails "ASAP" (encode) → intern reads it at 11 pm (decode: panic) → replies "done?" (feedback). Same word, different meaning.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Types</h3>
+      <ul>
+        <li><b class="b">Verbal</b> — spoken words (meetings, calls, presentations).</li>
+        <li><b class="b">Written</b> — emails, reports, chats. Permanent → be careful.</li>
+        <li><b class="b">Nonverbal</b> — face, posture, gestures, eye contact, tone.</li>
+        <li><b class="b">Visual</b> — charts, slides, diagrams.</li>
+        <li><b class="b">Listening</b> — half of all communication; <span class="ul r">hearing ≠ listening</span>.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>The 7 Cs <span class="p">(checklist for any message)</span></h3>
+      <div class="tbl"><table>
+        <tr><th>C</th><th>Ask yourself</th></tr>
+        <tr><td class="g">Clear</td><td>One purpose? Easy words?</td></tr>
+        <tr><td class="g">Concise</td><td>Can I cut words without losing meaning?</td></tr>
+        <tr><td class="g">Concrete</td><td>Facts, numbers, dates instead of vague claims</td></tr>
+        <tr><td class="g">Correct</td><td>Grammar, spelling, facts, names</td></tr>
+        <tr><td class="g">Coherent</td><td>Points connect logically</td></tr>
+        <tr><td class="g">Complete</td><td>Reader knows what to do next</td></tr>
+        <tr><td class="g">Courteous</td><td>Polite, respectful, reader-focused</td></tr>
+      </table></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Barriers</h3>
+      <ul>
+        <li><b class="r">Physical</b> — noise, distance, bad network.</li>
+        <li><b class="r">Language / semantic</b> — jargon, ambiguous words, accent.</li>
+        <li><b class="r">Psychological</b> — stress, anger, low confidence.</li>
+        <li><b class="r">Cultural</b> — gestures and eye contact mean different things.</li>
+        <li><b class="r">Perceptual</b> — assumptions, stereotypes, not listening.</li>
+        <li><b class="r">Information overload</b> — too much, too fast.</li>
+      </ul>
+      <p class="g">Fix: know the audience, simple words, check understanding, choose the right channel.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>Four communication styles</h3>
+      <div class="tbl"><table>
+        <tr><th>Style</th><th>Sounds like</th><th>Result</th></tr>
+        <tr><td class="r">Passive</td><td>"Whatever works for you."</td><td>Own needs ignored; resentment builds</td></tr>
+        <tr><td class="r">Aggressive</td><td>"Just do it my way."</td><td>Others feel attacked; trust drops</td></tr>
+        <tr><td class="r">Passive-aggressive</td><td>"Fine. <i>Sure</i>." (sarcasm, sulking)</td><td>Says yes, acts no; confusing</td></tr>
+        <tr><td class="g">Assertive</td><td>"I need the draft by Friday — can you manage?"</td><td>Honest + respectful; best outcome</td></tr>
+      </table></div>
+      <div class="rule"><span class="lbl">Aim = assertive</span><p>Use <b>"I" statements</b>: "<span class="o">I feel ___ when ___ because ___. Could we ___?</span>" Firm on the issue, soft on the person.</p></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">7.</span>Active listening</h3>
+      <ul>
+        <li>Full attention — phone away, eye contact, nod.</li>
+        <li><b class="p">Paraphrase</b>: "So what you're saying is…"</li>
+        <li>Ask open questions; don't interrupt; don't plan your reply while they talk.</li>
+        <li>Summarise at the end to confirm.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Communication is meaning understood, not words sent — encode for your audience, kill the noise, be assertive, and listen to understand.</p>
+</section>
+ 
+<div class="divider">Part 1 · Reading Comprehension<small>syllabus 01 · RC</small></div>
+ 
+<!-- ============ RC ============ -->
+<section class="sheet" id="rc">
+  <div class="sheet-head"><span class="tag">Sheet 2 · RC</span><h2>Reading comprehension</h2>
+  <span class="src">Exam part 1 · Reading Comprehension</span></div>
+  <div class="map" data-map="rc"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>The 4-step method</h3>
+      <ol>
+        <li><b class="b">Skim</b> (1 min): title, first + last paragraph, first line of each paragraph → <span class="hl">topic + author's view</span>.</li>
+        <li><b class="b">Glance at the questions</b> so you know what to hunt for.</li>
+        <li><b class="b">Read actively</b>: underline the main claim, circle tone words, box signal words.</li>
+        <li><b class="b">Answer from the passage</b>, not from what you know. Go back and find the line.</li>
+      </ol>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>Question types</h3>
+      <div class="tbl"><table>
+        <tr><th>Type</th><th>How to crack it</th></tr>
+        <tr><td class="p">Main idea / title</td><td>Covers the <b>whole</b> passage, not one paragraph</td></tr>
+        <tr><td class="p">Specific detail</td><td>Locate the line; match meaning, not just words</td></tr>
+        <tr><td class="p">Inference</td><td>Must be true based on the text; one small step, no leap</td></tr>
+        <tr><td class="p">Vocabulary in context</td><td>Replace the word with each option; reread the sentence</td></tr>
+        <tr><td class="p">Tone / attitude</td><td>Look at adjectives and adverbs the author chooses</td></tr>
+        <tr><td class="p">Author's purpose</td><td>Why written? to inform / argue / criticise / compare</td></tr>
+      </table></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Trap answers</h3>
+      <div class="trap"><span class="lbl">!! eliminate these first</span>
+        <ul>
+          <li><b>Too extreme</b>: <span class="r">always, never, all, only, completely</span>.</li>
+          <li><b>Out of scope</b>: sounds sensible, but the passage never says it.</li>
+          <li><b>Distortion</b>: uses the passage's words with a twisted meaning.</li>
+          <li><b>True but irrelevant</b>: correct fact, wrong question.</li>
+          <li><b>Half right</b>: first half fits, second half doesn't.</li>
+        </ul></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Signal words</h3>
+      <div class="tbl"><table>
+        <tr><th>Signal</th><th>Words</th><th>Meaning</th></tr>
+        <tr><td class="r">Contrast</td><td>however, but, yet, although, despite</td><td><span class="hl">the author's real point usually comes after</span></td></tr>
+        <tr><td class="g">Cause / result</td><td>therefore, hence, thus, so, as a result</td><td>conclusion follows</td></tr>
+        <tr><td class="b">Addition</td><td>moreover, furthermore, also</td><td>same direction, more support</td></tr>
+        <tr><td class="o">Example</td><td>for instance, such as, e.g.</td><td>evidence, not the main idea</td></tr>
+      </table></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Tone vocabulary</h3>
+      <ul>
+        <li><b class="g">Positive</b>: appreciative, laudatory, optimistic, admiring, enthusiastic.</li>
+        <li><b class="r">Negative</b>: critical, sarcastic, cynical, pessimistic, scornful, dismissive.</li>
+        <li><b class="b">Neutral</b>: objective, analytical, informative, descriptive, didactic (teaching).</li>
+        <li><b class="p">Mixed</b>: cautious, measured, sceptical, ambivalent.</li>
+      </ul>
+      <p><span class="r">Trap:</span> academic passages are rarely "angry" or "ecstatic". Prefer moderate words like <i>measured</i> or <i>cautiously optimistic</i>.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>Practice passage</h3>
+      <div class="passage"><p>Many companies moved their meetings online during the pandemic and never moved them back. Supporters point out that video calls save travel time and let teams in different cities work together. However, researchers have found that people on long video calls tire faster than in a room, partly because they watch their own face and must work harder to read small expressions. The answer is not to abandon video meetings but to use them with more discipline: shorter calls, cameras optional when they add nothing, and a clear agenda sent in advance.</p></div>
+      <p class="hint">Answer in your head, then tap to check.</p>
+      <details><summary>Q1. The main idea is…</summary><p class="ans">Video meetings are useful but tiring, so they should be used with discipline. (Not "video meetings should be abandoned" — the author rejects that.)</p></details>
+      <details><summary>Q2. The author's tone is best described as…</summary><p class="ans">Balanced / measured. Gives both sides, then a practical suggestion. Not critical, not enthusiastic.</p></details>
+      <details><summary>Q3. Which word signals the turn to the author's own view?</summary><p class="ans">"However" — the key point follows it.</p></details>
+      <details><summary>Q4. True, false or can't say: "Video calls are more tiring than phone calls."</summary><p class="ans">Can't say. The passage compares video calls with in-room meetings, not phone calls. Out of scope.</p></details>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Skim for the main idea, read for signal and tone words, and prove every answer with a line from the passage — cut extreme and out-of-scope options first.</p>
+</section>
+ 
+<div class="divider">Part 2 · Written Assessment<small>syllabus 02 · Error Spotting &amp; 04 · Subjective Questions</small></div>
+ 
+<!-- ============ ERRORS ============ -->
+<section class="sheet" id="errors">
+  <div class="sheet-head"><span class="tag">Sheet 3 · error spotting</span><h2>Spot the error</h2>
+  <span class="src">Grammar rules most tested · Cambridge Dictionary for usage checks</span></div>
+  <div class="map" data-map="errors"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">0.</span>Scan order (every sentence)</h3>
+      <p class="big p">Subject–verb → Tense → Article → Pronoun → Preposition → Parallel → Modifier → Comparison → Extra words</p>
+      <p>Read the <b>whole</b> sentence first. Find the <b>real subject</b> (ignore phrases in between). If nothing is wrong, mark <span class="g">"No error"</span> — it is a valid answer.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">1.</span>Subject–verb agreement</h3>
+      <div class="fix">
+        <span class="m r">✗</span><span>One of the students <s class="x">are</s> absent.</span><span class="m g">✓</span><span>One of the students <b class="g">is</b> absent.</span>
+        <span class="m r">✗</span><span>Each of the boys <s class="x">have</s> a bag.</span><span class="m g">✓</span><span>Each / every / either / neither + <b class="g">singular</b> → has.</span>
+        <span class="m r">✗</span><span>The captain, along with his players, <s class="x">were</s> late.</span><span class="m g">✓</span><span><b class="g">was</b> — "along with / as well as / with" don't add subjects.</span>
+        <span class="m r">✗</span><span>Neither the teacher nor the students <s class="x">was</s> ready.</span><span class="m g">✓</span><span><b class="g">were</b> — verb agrees with the <b>nearer</b> subject.</span>
+        <span class="m r">✗</span><span>The number of cars <s class="x">are</s> rising.</span><span class="m g">✓</span><span><b class="g">The</b> number … <b>is</b> · <b class="g">A</b> number of … <b>are</b>.</span>
+      </div>
+      <div class="trap"><span class="lbl">!! never plural</span><p>information, advice, furniture, luggage, equipment, news, feedback, research → <span class="r">no "-s"</span>, singular verb. "Many <s class="x">informations</s>" → <span class="g">much information</span>.</p></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>Tense</h3>
+      <div class="fix">
+        <span class="m r">✗</span><span>I <s class="x">am living</s> here since 2020.</span><span class="m g">✓</span><span>I <b class="g">have been living / have lived</b> here since 2020.</span>
+        <span class="m r">✗</span><span>If it <s class="x">will rain</s>, we will stay in.</span><span class="m g">✓</span><span>If it <b class="g">rains</b> — no "will" after if / when / unless / before.</span>
+        <span class="m r">✗</span><span>The train <s class="x">left</s> before we reached.</span><span class="m g">✓</span><span><b class="g">had left</b> — earlier past action = past perfect.</span>
+        <span class="m r">✗</span><span>I <s class="x">am knowing</s> the answer.</span><span class="m g">✓</span><span>I <b class="g">know</b> — stative verbs (know, believe, own, prefer) avoid -ing.</span>
+        <span class="m r">✗</span><span>Did he <s class="x">went</s>?</span><span class="m g">✓</span><span>Did he <b class="g">go</b>? — did / does + base form.</span>
+      </div>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Articles go by SOUND</h3>
+      <ul>
+        <li><b class="g">an</b> hour, an honest man, an MBA, an FIR (vowel <i>sound</i>).</li>
+        <li><b class="g">a</b> university, a European, a one-way street, a useful tip (y / w sound).</li>
+        <li><b class="g">the</b> + unique things, superlatives, rivers, oceans, ranges: the sun, the best, the Ganga, the Himalayas.</li>
+        <li><span class="r">No article</span>: meals, games, languages, most proper names — "play <s class="x">the</s> cricket", "learn <s class="x">the</s> French".</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Prepositions</h3>
+      <div class="tbl"><table>
+        <tr><th>Wrong</th><th>Right</th></tr>
+        <tr><td class="r">discuss about</td><td class="g">discuss the plan</td></tr>
+        <tr><td class="r">prefer tea than coffee</td><td class="g">prefer tea <b>to</b> coffee</td></tr>
+        <tr><td class="r">different than / to</td><td class="g">different <b>from</b></td></tr>
+        <tr><td class="r">married with</td><td class="g">married <b>to</b></td></tr>
+        <tr><td class="r">senior / superior than</td><td class="g">senior / superior <b>to</b></td></tr>
+        <tr><td class="r">comprises of</td><td class="g">comprises / consists <b>of</b> / is composed <b>of</b></td></tr>
+        <tr><td class="r">insist to go</td><td class="g">insist <b>on</b> going</td></tr>
+        <tr><td class="r">aware about</td><td class="g">aware <b>of</b></td></tr>
+      </table></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Pronouns</h3>
+      <ul>
+        <li>between you and <b class="g">me</b> (<s class="x">I</s>) — after a preposition use object form.</li>
+        <li>He is taller than <b class="g">I</b> (am).</li>
+        <li><b class="g">Who</b> = subject (who called?) · <b class="g">whom</b> = object (to whom did you write?).</li>
+        <li>Everyone must bring <b class="g">his or her / their</b> ID — not "your".</li>
+        <li>Its = belongs to it · <span class="r">it's = it is</span>.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>Parallelism · modifiers · comparison</h3>
+      <div class="fix">
+        <span class="m r">✗</span><span>She likes reading, writing and <s class="x">to swim</s>.</span><span class="m g">✓</span><span>reading, writing and <b class="g">swimming</b> — same form in a list.</span>
+        <span class="m r">✗</span><span>Walking down the road, <s class="x">the trees</s> looked lovely.</span><span class="m g">✓</span><span>Walking down the road, <b class="g">I saw</b> lovely trees — who was walking?</span>
+        <span class="m r">✗</span><span>Delhi's climate is hotter than <s class="x">Shimla</s>.</span><span class="m g">✓</span><span>than <b class="g">that of</b> Shimla — compare like with like.</span>
+        <span class="m r">✗</span><span>This is <s class="x">more better</s>.</span><span class="m g">✓</span><span><b class="g">better</b> — no double comparatives.</span>
+        <span class="m r">✗</span><span>He is <s class="x">elder</s> than me.</span><span class="m g">✓</span><span><b class="g">older</b> than — "elder" never takes "than".</span>
+      </div>
+    </div>
+    <div class="note">
+      <h3><span class="n">7.</span>Redundancy &amp; Indianisms</h3>
+      <div class="cards">
+        <div><h4 class="r">Cut the extra word</h4><p>return <s class="x">back</s> · revert <s class="x">back</s> · repeat <s class="x">again</s> · cousin <s class="x">brother</s> · <s class="x">free</s> gift · the reason is <s class="x">because</s> → <span class="g">that</span> · each <s class="x">and every</s></p></div>
+        <div><h4 class="r">Indianisms</h4><p>"do the needful" → <span class="g">please send the file</span> · "prepone" → <span class="g">bring forward</span> · "I have a doubt" → <span class="g">I have a question</span> · "out of station" → <span class="g">out of town</span> · "revert" (= reply) → <span class="g">reply</span></p></div>
+        <div><h4 class="p">Confusables</h4><p>affect (v) / effect (n) · principal / principle · lose / loose · then / than · advice (n) / advise (v) · stationary (still) / stationery (paper) · compliment / complement</p></div>
+        <div><h4 class="p">Question tags</h4><p>He is coming, <b class="g">isn't he</b>? · I am right, <b class="g">aren't I</b>? · Let's go, <b class="g">shall we</b>? · Nobody came, <b class="g">did they</b>?</p></div>
+      </div>
+    </div>
+    <div class="note">
+      <h3><span class="n">8.</span>Drill — find and fix</h3>
+      <p class="hint">Cover the answer, find the error, then tap.</p>
+      <details><summary>1. Neither of the two candidates were selected.</summary><p class="ans">were → <b>was</b> (neither = singular).</p></details>
+      <details><summary>2. Please find the attached informations below.</summary><p class="ans">informations → <b>information</b> (uncountable). Better: "I have attached the information."</p></details>
+      <details><summary>3. She has completed the course last year.</summary><p class="ans">has completed → <b>completed</b> (finished time "last year" = simple past).</p></details>
+      <details><summary>4. He is one of the best player in the team.</summary><p class="ans">player → <b>players</b> (one of the + plural noun).</p></details>
+      <details><summary>5. We discussed about the budget in detail.</summary><p class="ans">Remove <b>about</b>.</p></details>
+      <details><summary>6. I will call you when I will reach.</summary><p class="ans">when I will reach → <b>when I reach</b>.</p></details>
+      <details><summary>7. A European and a honest man met an university professor.</summary><p class="ans">a honest → <b>an honest</b>; an university → <b>a university</b>. "a European" is correct.</p></details>
+      <details><summary>8. The manager, as well as his team, are travelling today.</summary><p class="ans">are → <b>is</b> (verb follows "the manager").</p></details>
+      <details><summary>9. Kindly revert back at the earliest.</summary><p class="ans">"revert back" is redundant and an Indianism → <b>Please reply by Friday</b> (give a date).</p></details>
+      <details><summary>10. This phone is more cheaper than mine.</summary><p class="ans">more cheaper → <b>cheaper</b>.</p></details>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Find the real subject, check verb and tense, then articles by sound, fixed prepositions, parallel lists, dangling modifiers and extra words — and remember "No error" is sometimes right.</p>
+</section>
+ 
+<!-- ============ WRITING ============ -->
+<section class="sheet" id="writing">
+  <div class="sheet-head"><span class="tag">Sheet 4 · subjective &amp; written</span><h2>Writing answers people can act on</h2>
+  <span class="src">Resources: SCQA · Power of 3 · Pyramid Principle · Tips for Strong Emails (British Council) · Business Writing (Purdue OWL)</span></div>
+  <div class="map" data-map="writing"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>Answering a subjective question</h3>
+      <ol>
+        <li><b class="b">Answer in the first line</b> — don't warm up.</li>
+        <li><b class="b">Give 3 reasons</b> (Power of 3), one short paragraph each.</li>
+        <li><b class="b">Add an example</b> to each — real, specific.</li>
+        <li><b class="b">Close</b> by restating the answer in new words.</li>
+      </ol>
+      <p>Each paragraph = <span class="circ">PEEL</span> → <b class="p">P</b>oint · <b class="p">E</b>vidence / example · <b class="p">E</b>xplain · <b class="p">L</b>ink back to the question.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>SCQA <span class="p">— how to open anything</span></h3>
+      <div class="tbl"><table>
+        <tr><th>Step</th><th>What it does</th><th class="o">Example</th></tr>
+        <tr><td class="p">Situation</td><td>Facts everyone agrees on</td><td class="o">Our class submits group projects every month.</td></tr>
+        <tr><td class="p">Complication</td><td>What changed / the problem</td><td class="o">Three teams missed the last deadline.</td></tr>
+        <tr><td class="p">Question</td><td>What the reader now asks</td><td class="o">How do we stop missed deadlines?</td></tr>
+        <tr><td class="p">Answer</td><td>Your recommendation</td><td class="o">Add a mid-point check-in one week before.</td></tr>
+      </table></div>
+      <p class="hint">The Question is often only implied; S and C can be one sentence each.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Pyramid Principle <span class="p">(Barbara Minto)</span></h3>
+      <ul>
+        <li><span class="hl">Start with the answer</span> (the top of the pyramid), then the supporting points, then the data.</li>
+        <li>Group supporting points so they <b class="p">don't overlap</b> and <b class="p">nothing is missing</b> (MECE).</li>
+        <li>Each level answers the "Why?" or "How?" raised by the level above.</li>
+        <li>Busy readers can stop after the first line and still get the message.</li>
+      </ul>
+      <p class="arrow">Answer ▲ → 3 key arguments → facts / examples under each</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Power of 3</h3>
+      <ul>
+        <li>People remember <b class="g">three</b> items easily; three feels complete.</li>
+        <li><span class="o">"Veni, vidi, vici" · "Stop, look, listen" · "Reduce, reuse, recycle"</span>.</li>
+        <li>Use it for: 3 reasons, 3 slides of body, 3 benefits, a 3-word closing line.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Email anatomy</h3>
+      <div class="tbl"><table>
+        <tr><th>Part</th><th>Rule</th></tr>
+        <tr><td class="p">Subject</td><td>Specific + action: <span class="o">"Project report draft — feedback by Fri 17 Oct"</span></td></tr>
+        <tr><td class="p">Greeting</td><td>Formal: Dear Dr Rao, · Neutral: Hello Priya,</td></tr>
+        <tr><td class="p">Opening line</td><td><span class="hl">Purpose first</span>: "I am writing to request…"</td></tr>
+        <tr><td class="p">Body</td><td>One topic, short paragraphs, bullets for details</td></tr>
+        <tr><td class="p">Action</td><td>What, by whom, by when</td></tr>
+        <tr><td class="p">Close</td><td>Best regards / Kind regards + full name, role</td></tr>
+      </table></div>
+      <div class="trap"><span class="lbl">!! email traps</span><p>Vague subject ("Hi", "Query") · "Dear Sir" when you know the name · ALL CAPS · no deadline · "PFA" / "do the needful" · forgot the attachment · no proofread.</p></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>Model email</h3>
+      <div class="passage">
+        <p><b>Subject:</b> Request to reschedule presentation — Group 4, 20 Oct</p>
+        <p>Dear Ms Kapoor,</p>
+        <p>I am writing on behalf of Group 4 to request that our presentation be moved from 20 October to 22 October.</p>
+        <p>Two of our five members are representing the institute at the inter-college hackathon on 20 October. The other groups have agreed to swap slots with us, so the schedule will not change for anyone else.</p>
+        <p>Could you please confirm the change by Thursday, 16 October? I have attached the revised schedule.</p>
+        <p>Kind regards,<br>Aarav Mehta<br>Group 4 Lead, Section B</p>
+      </div>
+      <p class="o">Notice: purpose in line 1 · reason + solution · clear ask with date · attachment mentioned.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">7.</span>Business writing rules</h3>
+      <ul>
+        <li>Know your <b class="b">audience</b> and your <b class="b">purpose</b> before writing.</li>
+        <li><b class="g">Active voice</b>: "The team <i>finished</i> the report" not "The report was finished by the team".</li>
+        <li><b class="g">You-attitude</b>: write from the reader's side — "You will receive…" not "We have sent…".</li>
+        <li>Make it scannable: headings, bullets, bold the key date.</li>
+        <li>Positive framing: "You can collect it after 3 pm" not "You cannot collect it before 3 pm".</li>
+      </ul>
+      <div class="tbl"><table>
+        <tr><th>Wordy</th><th>Plain</th></tr>
+        <tr><td class="r">at this point in time</td><td class="g">now</td></tr>
+        <tr><td class="r">due to the fact that</td><td class="g">because</td></tr>
+        <tr><td class="r">in order to</td><td class="g">to</td></tr>
+        <tr><td class="r">utilise</td><td class="g">use</td></tr>
+        <tr><td class="r">please find attached herewith</td><td class="g">I have attached</td></tr>
+        <tr><td class="r">a large number of</td><td class="g">many</td></tr>
+      </table></div>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Answer first (Pyramid), frame the problem with SCQA, support with three points, write emails with a specific subject, purpose in line one and a dated ask.</p>
+</section>
+ 
+<div class="divider">Parts 3 &amp; 4 · Speaking &amp; Presentation<small>syllabus 03 · Group Presentation</small></div>
+ 
+<!-- ============ SPEAKING ============ -->
+<section class="sheet" id="speaking">
+  <div class="sheet-head"><span class="tag">Sheet 5 · speaking</span><h2>Speaking clearly and conversing well</h2>
+  <span class="src">Resources: 10 Ways to Have a Better Conversation (TED · Celeste Headlee) · Cambridge Dictionary · Forvo · BBC Learning English · Sounds of Speech (Univ. of Iowa)</span></div>
+  <div class="map" data-map="speaking"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>Headlee's 10 rules (in short)</h3>
+      <ol>
+        <li>Don't multitask — be fully present.</li>
+        <li>Don't lecture; stay open to learning.</li>
+        <li>Ask <b class="p">open-ended</b> questions (who, what, why, how).</li>
+        <li>Go with the flow — let thoughts come and go.</li>
+        <li>If you don't know, <span class="g">say so</span>.</li>
+        <li>Don't equate your experience with theirs.</li>
+        <li>Try not to repeat yourself.</li>
+        <li>Stay out of the weeds — skip names, dates, details.</li>
+        <li><span class="hl">Listen</span> — with the intent to understand, not to reply.</li>
+        <li>Be brief.</li>
+      </ol>
+      <p class="o">Master tip: be interested in other people, and be prepared to be amazed.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>Structure a spoken answer — PREP</h3>
+      <p class="big p">Point → Reason → Example → Point again</p>
+      <p class="o">"I think group work builds real skills (P). It forces you to negotiate and divide tasks (R). In our web project, we had to split frontend and backend and agree on deadlines (E). So group work prepares us for actual jobs (P)."</p>
+      <p>"Tell me about yourself" → <b class="p">Present</b> (who you are now) → <b class="p">Past</b> (what brought you here) → <b class="p">Future</b> (what you want next). 60–90 seconds.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Voice — the 5 Ps</h3>
+      <div class="tbl"><table>
+        <tr><th>P</th><th>Do this</th></tr>
+        <tr><td class="p">Pace</td><td>Slower than feels natural when nervous</td></tr>
+        <tr><td class="p">Pitch</td><td>Vary it; a flat voice sounds bored</td></tr>
+        <tr><td class="p">Pause</td><td><span class="hl">replace "um / like / basically" with a silent pause</span></td></tr>
+        <tr><td class="p">Power</td><td>Volume for the back row</td></tr>
+        <tr><td class="p">Pronunciation</td><td>Clear consonants, correct word stress</td></tr>
+      </table></div>
+      <p>Intonation: <b class="b">falling ↘</b> for statements and wh-questions · <b class="b">rising ↗</b> for yes/no questions.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Pronunciation essentials</h3>
+      <div class="cards">
+        <div><h4 class="p">Word stress</h4><p><b>PHO</b>tograph · pho<b>TO</b>graphy · photo<b>GRA</b>phic</p><p>Noun ↔ verb: <b>RE</b>cord / re<b>CORD</b> · <b>PRE</b>sent / pre<b>SENT</b> · <b>OB</b>ject / ob<b>JECT</b></p></div>
+        <div><h4 class="p">-ed endings</h4><p><b class="g">/t/</b> after voiceless: walked, laughed, kissed</p><p><b class="g">/d/</b> after voiced: played, called, lived</p><p><b class="g">/ɪd/</b> only after t or d: wanted, needed</p></div>
+        <div><h4 class="p">Schwa /ə/</h4><p>The most common English sound, in unstressed syllables: <span class="o">a</span>bout, ban<span class="o">a</span>n<span class="o">a</span>, probl<span class="o">e</span>m. Weak vowels make speech sound natural.</p></div>
+        <div><h4 class="p">Silent letters</h4><p>de<b class="r">b</b>t · dou<b class="r">b</b>t · recei<b class="r">p</b>t · i<b class="r">s</b>land · sa<b class="r">l</b>mon · We<b class="r">d</b>nesday · <b class="r">p</b>sychology · su<b class="r">b</b>tle</p></div>
+        <div><h4 class="p">Often said wrong</h4><p>vegetable (<i>VEJ-tuh-bl</i>) · comfortable (<i>KUMF-tuh-bl</i>) · determine (<i>di-TUR-min</i>) · hotel (<i>ho-TEL</i>) · suite (<i>sweet</i>)</p></div>
+        <div><h4 class="p">Minimal pairs</h4><p>ship / sheep · full / fool · <b>v</b>est / <b>w</b>est · <b>v</b>ine / <b>w</b>ine — <span class="r">v (teeth on lip) ≠ w (round lips)</span></p></div>
+      </div>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Which tool for what</h3>
+      <ul>
+        <li><b class="b">Cambridge Dictionary</b> — IPA + UK and US audio, example sentences, usage.</li>
+        <li><b class="b">Forvo</b> — words (and names) said by native speakers.</li>
+        <li><b class="b">BBC Learning English</b> — short lessons; pronunciation series for sounds and stress.</li>
+        <li><b class="b">Sounds of Speech</b> — animations of the mouth for each sound.</li>
+      </ul>
+      <div class="rule"><span class="lbl">Daily 10-minute drill</span><p>Look up 5 words in Cambridge → repeat the audio 3× → record yourself → compare.</p></div>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Listen to understand, ask open questions, be brief; answer with PREP; pause instead of filler; get word stress, -ed endings and v/w right.</p>
+</section>
+ 
+<!-- ============ PRESENTATION ============ -->
+<section class="sheet" id="present">
+  <div class="sheet-head"><span class="tag">Sheet 6 · group presentation</span><h2>Presenting as a team</h2>
+  <span class="src">Resources: Your Body Language May Shape Who You Are (TED · Amy Cuddy) · Body Language &amp; Nonverbal Communication (helpguide) · Power of 3 · SCQA</span></div>
+  <div class="map" data-map="present"></div>
+  <div class="grid">
+    <div class="note">
+      <h3><span class="n">1.</span>Structure</h3>
+      <div class="tbl"><table>
+        <tr><th>Part</th><th>Content</th><th>Time*</th></tr>
+        <tr><td class="p">Hook</td><td>Question, surprising number, short story</td><td>~10%</td></tr>
+        <tr><td class="p">Agenda</td><td>"Three things today: …" (Power of 3)</td><td>short</td></tr>
+        <tr><td class="p">Body</td><td>3 points, each with evidence / example; SCQA for the problem</td><td>~70%</td></tr>
+        <tr><td class="p">Conclusion</td><td>Recap the 3 points + call to action / memorable line</td><td>~10%</td></tr>
+        <tr><td class="p">Q&amp;A</td><td>Whole team, prepared answers</td><td>rest</td></tr>
+      </table></div>
+      <p class="hint">* rough split; follow your exam's time limit.</p>
+      <p class="g">"Tell them what you'll tell them → tell them → tell them what you told them."</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">2.</span>Teamwork on stage</h3>
+      <ul>
+        <li>Assign roles: <b class="p">opener</b>, content speakers, <b class="p">closer</b>, slide controller, timekeeper.</li>
+        <li><span class="hl">Hand-offs by name</span>: "Now Riya will show how we tested it." Never "next slide… uh, who's next?"</li>
+        <li>Everyone knows the <b>whole</b> deck — anyone can cover for anyone.</li>
+        <li>Rehearse together with a timer at least twice.</li>
+        <li>When not speaking: face the speaker or the audience, stay still, look engaged.</li>
+        <li>Share Q&amp;A topics in advance so two people don't answer at once.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">3.</span>Slides</h3>
+      <ul>
+        <li><b class="g">One idea per slide</b>; the title states the takeaway.</li>
+        <li>Few words, large text (≈24 pt+), a picture or chart where possible.</li>
+        <li>Same fonts and colours throughout; high contrast.</li>
+        <li><span class="r">Never read the slides aloud</span> — the slide supports you, you aren't its narrator.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3><span class="n">4.</span>Nonverbal channels</h3>
+      <div class="tbl"><table>
+        <tr><th>Channel</th><th>Do this on stage</th></tr>
+        <tr><td class="p">Eye contact</td><td>Hold 3–5 s per person; cover left, centre, right</td></tr>
+        <tr><td class="p">Posture</td><td>Feet shoulder-width, upright, open chest</td></tr>
+        <tr><td class="p">Gestures</td><td>Open palms, between waist and shoulders</td></tr>
+        <tr><td class="p">Face</td><td>Smile at start; match expression to message</td></tr>
+        <tr><td class="p">Space</td><td>Step toward the audience for key points</td></tr>
+        <tr><td class="p">Voice (paralanguage)</td><td>Tone, pace, pauses — see Sheet 5</td></tr>
+        <tr><td class="p">Appearance</td><td>Neat, coordinated with the team</td></tr>
+      </table></div>
+      <p class="r">Avoid: crossed arms, hands in pockets, swaying, looking at the floor, fiddling with a pen, back to the audience.</p>
+      <p>When words and body language <b>disagree</b>, people tend to believe the body. Keep them aligned.</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">5.</span>Amy Cuddy — power poses</h3>
+      <ul>
+        <li>Expansive, open postures ("high-power poses") held ~2 minutes <b>before</b> a stressful evaluation (interview, talk) can make you <b class="g">feel</b> more confident.</li>
+        <li>Body language shapes how others see us, and may shape how we see ourselves.</li>
+        <li>Her message: <span class="hl">"fake it till you become it"</span>.</li>
+      </ul>
+      <div class="trap"><span class="lbl">!! know the debate</span><p>Later studies supported the <b>feeling</b> of power, but did not replicate the claimed hormone changes. Say "may help you feel confident", not "changes your hormones".</p></div>
+    </div>
+    <div class="note">
+      <h3><span class="n">6.</span>The 7–38–55 myth</h3>
+      <p>Mehrabian: words 7%, tone 38%, body 55% — <span class="r">only</span> when someone talks about <b>feelings or attitudes</b> and their words and tone/face <b>contradict</b>.</p>
+      <p class="r">It does NOT mean "93% of all communication is nonverbal".</p>
+    </div>
+    <div class="note">
+      <h3><span class="n">7.</span>Handling Q&amp;A</h3>
+      <ol>
+        <li><b>Listen</b> to the full question; don't interrupt.</li>
+        <li><b>Repeat or paraphrase</b> it so everyone hears it and you get thinking time.</li>
+        <li><b>Answer briefly</b> — point + one reason or example.</li>
+        <li>Don't know? <span class="g">"Good point — we didn't look at that; we'll follow up."</span> Never bluff.</li>
+        <li><b>Bridge</b> back to your key message.</li>
+      </ol>
+    </div>
+    <div class="note">
+      <h3><span class="n">8.</span>Beat the nerves</h3>
+      <ul>
+        <li>Memorise your first 30 seconds word for word.</li>
+        <li>Breathe slowly: in 4 counts, out 4 counts, three times.</li>
+        <li>Find 2–3 friendly faces in different parts of the room.</li>
+        <li>A short pause feels long to you and normal to the audience.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="takeaway"><b>One line:</b> Hook, three points, strong close; hand off by name; slides support, you speak; open posture and steady eye contact; repeat the question, answer briefly, never bluff.</p>
+</section>
+ 
+<!-- ============ CHEAT ============ -->
+<section class="sheet" id="cheat">
+  <div class="sheet-head"><span class="tag">exam eve</span><h2>Last-minute sheet</h2></div>
+  <div class="grid">
+    <div class="note">
+      <h3>One frame per exam part</h3>
+      <div class="tbl"><table>
+        <tr><th>Part</th><th>Remember</th></tr>
+        <tr><td class="p">RC</td><td>Skim → questions → read with signal words → prove from the text · kill extreme options</td></tr>
+        <tr><td class="p">Error spotting</td><td>S-V → tense → article → pronoun → preposition → parallel → modifier → comparison → extra word · "No error" exists</td></tr>
+        <tr><td class="p">Subjective</td><td>Answer first · 3 points (PEEL) · examples · conclusion</td></tr>
+        <tr><td class="p">Email</td><td>Specific subject · purpose in line 1 · dated ask · proper close · proofread</td></tr>
+        <tr><td class="p">Speaking</td><td>PREP · pause, don't fill · open questions · brief</td></tr>
+        <tr><td class="p">Presentation</td><td>Hook · agenda of 3 · SCQA · recap + call to action · hand-offs by name</td></tr>
+      </table></div>
+    </div>
+    <div class="note">
+      <h3>Frameworks in one breath</h3>
+      <ul>
+        <li><b class="p">7 Cs</b>: clear, concise, concrete, correct, coherent, complete, courteous.</li>
+        <li><b class="p">SCQA</b>: situation, complication, question, answer.</li>
+        <li><b class="p">Pyramid</b>: answer on top, grouped reasons, data at the bottom.</li>
+        <li><b class="p">Power of 3</b>: three points stick.</li>
+        <li><b class="p">PEEL</b>: point, evidence, explain, link.</li>
+        <li><b class="p">PREP</b>: point, reason, example, point.</li>
+        <li><b class="p">Styles</b>: passive, aggressive, passive-aggressive, <span class="g">assertive ✓</span>.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Quick fixes to know cold</h3>
+      <div class="fix">
+        <span class="m g">✓</span><span>one of the + plural noun + singular verb</span>
+        <span class="m g">✓</span><span>the number … is · a number of … are</span>
+        <span class="m g">✓</span><span>if it rains (no "will")</span>
+        <span class="m g">✓</span><span>an hour · a university · an MBA</span>
+        <span class="m g">✓</span><span>discuss it · prefer A to B · different from · comprises</span>
+        <span class="m g">✓</span><span>between you and me · older than (not elder)</span>
+        <span class="m g">✓</span><span>information / advice / feedback — no plural</span>
+        <span class="m g">✓</span><span>walked /t/ · played /d/ · wanted /ɪd/</span>
+      </div>
+    </div>
+    <div class="note">
+      <h3>Exam-day checklist</h3>
+      <ul>
+        <li>Group: final timed run-through · roles and hand-offs confirmed · backup of slides on two devices.</li>
+        <li>Dress neatly; arrive early; check the projector.</li>
+        <li>Written: read every instruction; leave 5 minutes to proofread.</li>
+        <li>Speaking: slow down, smile, pause. If you blank, say "Let me rephrase that" and restart the point.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+ 
+<footer>made for exam prep · Communication · Mid-Semester</footer>
+</div>
+ 
+<script>
+const MAPS={
+  master:{c:"Communication exam",b:[
+    ["Basics","process, 7 Cs, styles"],["RC","main idea, tone, traps"],["Error spotting","grammar rules"],
+    ["Subjective","answer first, PEEL"],["Email & writing","SCQA, Pyramid"],["Speaking","PREP, pronunciation"],["Presentation","structure, body language"]]},
+  basics:{c:"Communication",b:[
+    ["Process","sender → receiver"],["Noise","barriers"],["Types","verbal, written, nonverbal"],
+    ["7 Cs","message checklist"],["Styles","be assertive"],["Listening","paraphrase, ask"]]},
+  rc:{c:"Reading Comprehension",b:[
+    ["Skim","topic + view"],["Question types","6 kinds"],["Signal words","however → key point"],
+    ["Tone","positive / negative / neutral"],["Traps","extreme, out of scope"],["Prove it","find the line"]]},
+  errors:{c:"Error Spotting",b:[
+    ["Subject–verb","find real subject"],["Tense","since, if, had"],["Articles","by sound"],
+    ["Prepositions","fixed pairs"],["Pronouns","you and me"],["Parallel & modifier","same form"],["Extra words","return back ✗"]]},
+  writing:{c:"Written Assessment",b:[
+    ["Answer first","Pyramid Principle"],["SCQA","frame the problem"],["Power of 3","three points"],
+    ["PEEL","paragraph shape"],["Email","subject, purpose, ask"],["Plain English","active voice"]]},
+  speaking:{c:"Speaking",b:[
+    ["Conversation","Headlee's 10"],["PREP","answer shape"],["Voice","5 Ps"],
+    ["Stress","PHOtograph"],["Sounds","-ed, schwa, v/w"],["Tools","Cambridge, Forvo"]]},
+  present:{c:"Group Presentation",b:[
+    ["Structure","hook → 3 → close"],["Team","roles, hand-offs"],["Slides","one idea each"],
+    ["Body language","eyes, posture"],["Power poses","Cuddy + debate"],["Q&A","repeat, answer, bridge"],["Nerves","breathe, first 30 s"]]}
+};
+const PENS=["--blue","--red","--green","--purple","--orange"];
+const NS="http://www.w3.org/2000/svg";
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function draw(host,data){
+  const W=740,H=400,cx=W/2,cy=H/2,n=data.b.length,rx=262,ry=142;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":"Mind map: "+data.c+" — "+data.b.map(b=>b[0]).join(", ")});
+  const lines=el("g",{},svg),nodes=el("g",{},svg);
+  data.b.forEach((b,i)=>{
+    const ang=-Math.PI/2+i*2*Math.PI/n,col=`var(${PENS[i%PENS.length]})`;
+    let x=cx+rx*Math.cos(ang),y=cy+ry*Math.sin(ang);
+    const w=Math.max(b[0].length*10.8,b[1].length*8.2)+28,h=52;
+    x=Math.min(Math.max(x,w/2+6),W-w/2-6);y=Math.min(Math.max(y,h/2+6),H-h/2-6);
+    const mx=(cx+x)/2+(y-cy)*0.18,my=(cy+y)/2-(x-cx)*0.12;
+    el("path",{d:`M${cx} ${cy} Q${mx} ${my} ${x} ${y}`,fill:"none",stroke:col,"stroke-width":2,"stroke-linecap":"round"},lines);
+    el("rect",{x:x-w/2,y:y-h/2,width:w,height:h,rx:16,fill:"var(--box)",stroke:col,"stroke-width":1.8},nodes);
+    const t1=el("text",{x:x,y:y-3,"text-anchor":"middle","font-size":22,"font-weight":700,fill:col},nodes);t1.textContent=b[0];
+    const t2=el("text",{x:x,y:y+17,"text-anchor":"middle","font-size":15,fill:"var(--soft)"},nodes);t2.textContent=b[1];
+  });
+  const cw=data.c.length*12.5+54;
+  el("ellipse",{cx:cx,cy:cy,rx:cw/2,ry:38,fill:"var(--hilite)",stroke:"var(--ink)","stroke-width":2},nodes);
+  const ct=el("text",{x:cx,y:cy+8,"text-anchor":"middle","font-size":26,"font-weight":700,fill:"var(--ink)"},nodes);ct.textContent=data.c;
+  host.appendChild(svg);
+}
+document.querySelectorAll("[data-map]").forEach(h=>{const d=MAPS[h.dataset.map];if(d)draw(h,d)});
+ 
+/* keep boxed blocks on the ruled lines */
+const LINE=36;
+function snap(){
+  const sel=".sheet .tbl,.sheet .cards,.sheet .passage,.sheet details,.sheet .trap,.sheet .rule,.sheet .ex";
+  const els=[...document.querySelectorAll(sel)];
+  const depth=e=>{let d=0;while(e=e.parentElement)d++;return d};
+  els.sort((a,b)=>depth(b)-depth(a));
+  els.forEach(e=>{e.style.marginBottom=""});
+  els.forEach(e=>{
+    const cs=getComputedStyle(e),mb=parseFloat(cs.marginBottom)||0;
+    const total=e.getBoundingClientRect().height+mb;
+    const extra=Math.ceil(total/LINE-0.01)*LINE-total;
+    e.style.marginBottom=(mb+extra)+"px";
+  });
+}
+let t;const run=()=>{clearTimeout(t);t=setTimeout(snap,60)};
+snap();window.addEventListener("resize",run);
+document.querySelectorAll("details").forEach(d=>d.addEventListener("toggle",run));
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(snap);
+</script>
+ 
