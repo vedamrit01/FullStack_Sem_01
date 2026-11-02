@@ -42,10 +42,15 @@ console.log(typeof student);
 
 // -------------------------------------------------
 
-const product = {
-    title : "Monitor",
-    price : 7000,
-}
+// const product = {
+//     title : "Monitor",
+//     price : 7000,
+// }
 
 
-const keyboard = product;
+// const keyboard = product;
+// keyboard.title = "Keyboard",   //mutate
+// console.log(keyboard);
+// console.log(product);
+
+// ---------------------------------------------------
