@@ -13,3 +13,4 @@
 
 // ----------Array---------------------------------
 // const arr = [apple , banana , cat,]
+alert("hello");
